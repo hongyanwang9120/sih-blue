@@ -8,11 +8,18 @@
   "private": true,
   "scripts": {
     "package:clean": "rm -rf node_modules/ dist/ && mkdir -p dist/",
-    "package:layer": "mkdir -p dist/nodejs/ && cp -rf node_modules dist/nodejs/ && cd dist/ && zip -rq layer.zip .",
-    "package": "yarn package:clean && export SHARP_IGNORE_GLOBAL_LIBVIPS=1 npm_config_platform=linux npm_config_arch=x64 && yarn --prod && yarn package:layer"
+    "package:layer": "mkdir -p dist/nodejs/ && cp -rf node_modules dist/nodejs/ && cd dist/ && zip -rq layer.zip . && cd ..",
+    "package:src": "cd src/ && zip -rq src.zip . && mv src.zip ../dist/ && cd ..",
+    "package": "yarn package:clean && export SHARP_IGNORE_GLOBAL_LIBVIPS=1 npm_config_platform=linux npm_config_arch=x64 && yarn --prod && yarn package:src && yarn package:layer"
   },
   "dependencies": {
     "aws-sdk": "^2.995.0",
+    "color": "^4.0.1",
     "sharp": "^0.29.1"
+  },
+  "devDependencies": {
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.24.2"
   }
 }
