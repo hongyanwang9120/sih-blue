@@ -1,0 +1,18 @@
+{
+  "name": "sih-blue",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:wchaws/sih-blue.git",
+  "author": "Charles Wei <wch@amazon.com>",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "package:clean": "rm -rf node_modules/ dist/ && mkdir -p dist/",
+    "package:layer": "mkdir -p dist/nodejs/ && cp -rf node_modules dist/nodejs/ && cd dist/ && zip -rq layer.zip .",
+    "package": "yarn package:clean && export SHARP_IGNORE_GLOBAL_LIBVIPS=1 npm_config_platform=linux npm_config_arch=x64 && yarn --prod && yarn package:layer"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.995.0",
+    "sharp": "^0.29.1"
+  }
+}
