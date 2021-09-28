@@ -1,8 +1,9 @@
+const fs = require('fs');
 const path = require('path');
 const sharp = require('sharp');
 const { ImageView2 } = require('../src/image-view2');
 
-const GOGOPHER = path.join(__dirname, './fixtures/gogopher.jpg');
+const GOGOPHER = fs.readFileSync(path.join(__dirname, './fixtures/gogopher.jpg'));
 
 it('image-view2 resize basic', async () => {
   const image = sharp({
