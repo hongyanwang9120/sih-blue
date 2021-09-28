@@ -3,17 +3,18 @@ const path = require('path');
 const S3 = require('aws-sdk/clients/s3');
 
 class S3Store {
-  constructor(bucket, region) {
+  constructor(bucket) {
     this._bucket = bucket;
-    this._s3 = new S3({ region });
+    this._s3 = new S3();
   }
 
   async get(key) {
+    console.log(`S3Store request s3://${this._bucket}/${key}`);
     const res = await this._s3.getObject({
       Bucket: this._bucket,
       Key: key,
     }).promise();
-    return res;
+    return res.Body;
   }
 }
 

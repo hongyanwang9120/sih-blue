@@ -82,6 +82,8 @@ class ImageView2 {
     if (this._q && (JPEG === metadata.format || JPG === metadata.format)) {
       image.jpeg({ quality: this._q });
     }
+
+    return image;
   }
 }
 

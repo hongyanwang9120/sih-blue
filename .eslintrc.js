@@ -16,5 +16,6 @@ module.exports = {
     'func-names': 'off',
     'no-underscore-dangle': 'off',
     'max-classes-per-file': 'off',
+    'no-template-curly-in-string': 'off',
   },
 };
