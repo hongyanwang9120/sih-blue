@@ -15,5 +15,6 @@ module.exports = {
     'no-console': 'off',
     'func-names': 'off',
     'no-underscore-dangle': 'off',
+    'max-classes-per-file': 'off',
   },
 };
