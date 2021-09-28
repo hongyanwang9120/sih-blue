@@ -7,19 +7,41 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "package:clean": "rm -rf node_modules/ dist/ && mkdir -p dist/",
-    "package:layer": "mkdir -p dist/nodejs/ && cp -rf node_modules dist/nodejs/ && cd dist/ && zip -rq layer.zip . && cd ..",
+    "test": "jest",
+    "package:clean": "rm -rf node_modules/ dist/ && mkdir -p dist/nodejs",
+    "package:layer": "mv node_modules dist/nodejs/ && cd dist/ && zip -rq layer.zip . && cd ..",
     "package:src": "cd src/ && zip -rq src.zip . && mv src.zip ../dist/ && cd ..",
-    "package": "yarn package:clean && export SHARP_IGNORE_GLOBAL_LIBVIPS=1 npm_config_platform=linux npm_config_arch=x64 && yarn --prod && yarn package:src && yarn package:layer"
+    "package": "yarn package:clean && export SHARP_IGNORE_GLOBAL_LIBVIPS=1 npm_config_platform=linux npm_config_arch=x64 && yarn --prod && yarn package:layer && yarn package:src"
   },
   "dependencies": {
     "aws-sdk": "^2.995.0",
     "color": "^4.0.1",
+    "http-errors": "^1.8.0",
     "sharp": "^0.29.1"
   },
   "devDependencies": {
+    "@types/jest": "^27.0.2",
     "eslint": "^7.32.0",
     "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-plugin-import": "^2.24.2"
+    "eslint-plugin-import": "^2.24.2",
+    "jest": "^27.2.2"
+  },
+  "jest": {
+    "clearMocks": true,
+    "collectCoverage": true,
+    "coverageDirectory": "coverage",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/"
+    ],
+    "testMatch": [
+      "**/__tests__/**/*.js?(x)",
+      "**/?(*.)+(spec|test).js?(x)"
+    ],
+    "reporters": [
+      "default"
+    ]
   }
 }
