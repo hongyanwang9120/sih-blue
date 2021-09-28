@@ -16,6 +16,6 @@ it('imageInfo', async () => {
     width: 640,
     height: 427,
     colorModel: 'srgb',
-    orientation: 1,
+    // orientation: 1,
   });
 });

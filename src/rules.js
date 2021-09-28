@@ -1,8 +1,9 @@
 const sharp = require('sharp');
+const createError = require('http-errors');
 const { S3Store } = require('./store');
 const { ImageView2 } = require('./image-view2');
 
-const bucket = process.env.SOURCE_BUCKETS.split(',')[0];
+const bucket = (process.env.SOURCE_BUCKETS || '').split(',')[0];
 const store = new S3Store(bucket);
 
 const rules = [
@@ -17,6 +18,37 @@ const rules = [
     repl: '${0}?imageMogr2/thumbnail/!33p',
     example_input: '/blued/mrright/408119/408119_1433488325.png',
     example_output: '/blued/mrright/408119/408119_1433488325.png?imageMogr2/thumbnail/!33p',
+  },
+  {
+    pattern: '/userfiles((?:/\\w\\w*)*)(?:%21|!)Background[.]jpg(?:%21|!)([1-9]\\d*)x([1-9]\\d*)[.]png(?:%21|!)48$',
+    repl: '/userfiles${1}!Background.jpg!o.png?imageView2/2/w/${2}/h/${3}/q/48',
+    example_input: '/userfiles/009/334/225/85338!Background.jpg!640x1090.png!48',
+    example_output: '/userfiles/009/334/225/85338!Background.jpg!o.png?imageView2/2/w/640/h/1090/q/48',
+    async process(pathname, match) {
+      const key = `userfiles${match[1]}!Background.jpg!o.png`;
+      const buffer = await store.get(key);
+      const iv2 = new ImageView2(sharp(buffer));
+
+      const out = await iv2.m(2).w(640).h(1090).q(48)
+        .process();
+
+      return out.toBuffer({ resolveWithObject: true });
+    },
+  },
+  {
+    pattern: '/userfiles((?:/\\w\\w*)*)(?:%21|!)Background[.]jpg(?:%21|!)([1-9]\\d*)x([1-9]\\d*)[.]png$',
+    repl: '/userfiles${1}!Background.jpg!o.png?imageView2/2/w/${2}/h/${3}',
+    example_input: '/userfiles/009/334/225/85338!Background.jpg!640x1090.png',
+    example_output: '/userfiles/009/334/225/85338!Background.jpg!o.png?imageView2/2/w/640/h/1090',
+    async process(pathname, match) {
+      const key = `userfiles${match[1]}!Background.jpg!o.png`;
+      const buffer = await store.get(key);
+      const iv2 = new ImageView2(sharp(buffer));
+
+      const out = await iv2.m(2).w(640).h(1090).process();
+
+      return out.toBuffer({ resolveWithObject: true });
+    },
   },
   {
     pattern: '/userfiles((?:/\\w\\w*)*)(?:%21|!)Background[.]jpg$',
@@ -38,6 +70,16 @@ const rules = [
     repl: '/userfiles${1}!Background.jpg!o.png?imageView2/2/w/480/h/820/q/48',
     example_input: '/userfiles/009/334/225/85338!Background.jpg!48',
     example_output: '/userfiles/009/334/225/85338!Background.jpg!o.png?imageView2/2/w/480/h/820/q/48',
+    async process(pathname, match) {
+      const key = `userfiles${match[1]}!Background.jpg!o.png`;
+      const buffer = await store.get(key);
+      const iv2 = new ImageView2(sharp(buffer));
+
+      const out = await iv2.m(2).w(480).h(820).q(48)
+        .process();
+
+      return out.toBuffer({ resolveWithObject: true });
+    },
   },
   {
     pattern: '/avatars((?:/\\w\\w*)*)/([[\\w-]+)[.](\\w+)(?:%21|!)m[.]png$',
@@ -555,11 +597,6 @@ const rules = [
     repl: '/advertise${1}/${2}.${3}?imageView2/2/w/${4}/h/${5}/q/48',
     example_input: '/advertise/pics/f99687dd719c4e8bc6a39e946c3d9ef7-1463645316-10851.png!480x720.png!48',
     example_output: '/advertise/pics/f99687dd719c4e8bc6a39e946c3d9ef7-1463645316-10851.png?imageView2/2/w/480/h/720/q/48',
-  }, {
-    pattern: '/userfiles((?:/\\w\\w*)*)(?:%21|!)Background[.]jpg(?:%21|!)([1-9]\\d*)x([1-9]\\d*)[.]png$',
-    repl: '/userfiles${1}!Background.jpg!o.png?imageView2/2/w/${2}/h/${3}',
-    example_input: '/userfiles/009/334/225/85338!Background.jpg!640x1090.png',
-    example_output: '/userfiles/009/334/225/85338!Background.jpg!o.png?imageView2/2/w/640/h/1090',
   },
   {
     pattern: '/userfiles((?:/\\w\\w*)*)(?:%21|!)Background[.]jpg(?:%21|!)o(?:riginal)?[.]png$',
@@ -574,26 +611,17 @@ const rules = [
     example_output: '/userfiles/009/334/225/85338!Background.jpg!o.png?imageView2/2/w/480/h/820',
   },
   {
-    pattern: '/userfiles((?:/\\w\\w*)*)(?:%21|!)Background[.]jpg(?:%21|!)([1-9]\\d*)x([1-9]\\d*)[.]png(?:%21|!)48$',
-    repl: '/userfiles${1}!Background.jpg!o.png?imageView2/2/w/${2}/h/${3}/q/48',
-    example_input: '/userfiles/009/334/225/85338!Background.jpg!640x1090.png!48',
-    example_output: '/userfiles/009/334/225/85338!Background.jpg!o.png?imageView2/2/w/640/h/1090/q/48',
-  },
-  {
     pattern: '/userfiles((?:/\\w\\w*)*)(?:%21|!)Background[.]jpg(?:%21|!)o(?:riginal)?[.]png(?:%21|!)48$',
     repl: '/userfiles${1}!Background.jpg!o.png',
     example_input: '/userfiles/009/334/221/37115!Background.jpg!original.png!48',
     example_output: '/userfiles/009/334/221/37115!Background.jpg!o.png',
   },
-  {
-    pattern: '/userfiles((?:/\\w\\w*)*)(?:%21|!)Background[.]jpg(?:%21|!)48$',
-    repl: '/userfiles${1}!Background.jpg!o.png?imageView2/2/w/480/h/820/q/48',
-    example_input: '/userfiles/009/334/225/85338!Background.jpg!48',
-    example_output: '/userfiles/009/334/225/85338!Background.jpg!o.png?imageView2/2/w/480/h/820/q/48',
-  },
 ];
 
 exports.find = function (pathname) {
+  if (!pathname) {
+    throw createError(400, 'Invalid url: empty pathname');
+  }
   // eslint-disable-next-line no-restricted-syntax
   for (const rule of rules) {
     const m = pathname.match(rule.pattern);
