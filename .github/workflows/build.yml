@@ -33,3 +33,8 @@ jobs:
         run: yarn install --check-files --frozen-lockfile
       - name: Package
         run: yarn package
+      - name: Upload package
+        uses: actions/upload-artifact@v2
+        with:
+          name: package
+          path: dist/*.zip
