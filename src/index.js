@@ -2,8 +2,10 @@ const rules = require('./rules');
 
 exports.handler = async function (event) {
   console.log('request:', JSON.stringify(event, undefined, 2));
+  let myEvent = JSON.parse(JSON.stringify(event))
 
-  const processFunc = rules.find(event.path);
+const processFunc = rules.find(myEvent.rawPath);  //bluedsy
+  // const processFunc = rules.find(event.path);  //blued
   if (processFunc) {
     const { data, info } = await processFunc();
     return {
