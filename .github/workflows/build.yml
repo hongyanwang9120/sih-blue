@@ -36,5 +36,5 @@ jobs:
       - name: Upload package
         uses: actions/upload-artifact@v2
         with:
-          name: package
+          name: package node ${{ matrix.node-version }}
           path: dist/*.zip
