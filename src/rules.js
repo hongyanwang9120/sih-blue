@@ -20,37 +20,6 @@ const rules = [
     example_output: '/blued/mrright/408119/408119_1433488325.png?imageMogr2/thumbnail/!33p',
   },
   {
-    pattern: '/userfiles((?:/\\w\\w*)*)(?:%21|!)Background[.]jpg(?:%21|!)([1-9]\\d*)x([1-9]\\d*)[.]png(?:%21|!)48$',
-    repl: '/userfiles${1}!Background.jpg!o.png?imageView2/2/w/${2}/h/${3}/q/48',
-    example_input: '/userfiles/009/334/225/85338!Background.jpg!640x1090.png!48',
-    example_output: '/userfiles/009/334/225/85338!Background.jpg!o.png?imageView2/2/w/640/h/1090/q/48',
-    async process(pathname, match) {
-      const key = `userfiles${match[1]}!Background.jpg!o.png`;
-      const buffer = await store.get(key);
-      const iv2 = new ImageView2(sharp(buffer));
-
-      const out = await iv2.m(2).w(640).h(1090).q(48)
-        .process();
-
-      return out.toBuffer({ resolveWithObject: true });
-    },
-  },
-  {
-    pattern: '/userfiles((?:/\\w\\w*)*)(?:%21|!)Background[.]jpg(?:%21|!)([1-9]\\d*)x([1-9]\\d*)[.]png$',
-    repl: '/userfiles${1}!Background.jpg!o.png?imageView2/2/w/${2}/h/${3}',
-    example_input: '/userfiles/009/334/225/85338!Background.jpg!640x1090.png',
-    example_output: '/userfiles/009/334/225/85338!Background.jpg!o.png?imageView2/2/w/640/h/1090',
-    async process(pathname, match) {
-      const key = `userfiles${match[1]}!Background.jpg!o.png`;
-      const buffer = await store.get(key);
-      const iv2 = new ImageView2(sharp(buffer));
-
-      const out = await iv2.m(2).w(640).h(1090).process();
-
-      return out.toBuffer({ resolveWithObject: true });
-    },
-  },
-  {
     pattern: '/userfiles((?:/\\w\\w*)*)(?:%21|!)Background[.]jpg$',
     repl: '/userfiles${1}!Background.jpg!o.png?imageView2/2/w/480/h/820',
     example_input: '/userfiles/009/334/225/85338!Background.jpg',
@@ -140,7 +109,8 @@ const rules = [
     repl: '/avatars${1}/${2}.${3}?imageView2/1/w/${4}/h/${5}/q/48',
     example_input: '/avatars/c8573157bcfea2ed163bdf2c52e6e238-1464334585-25850.png!200x200.png!48',
     example_output: '/avatars/c8573157bcfea2ed163bdf2c52e6e238-1464334585-25850.png?imageView2/1/w/200/h/200/q/48',
-  }, {
+  },
+  {
     example_input: '/userfiles/000/000/002/17!Head.png!m.png?imageInfo',
     example_output: '/userfiles/000/000/002/17!Head.png!o.png?imageMogr2/thumbnail/480x|imageInfo',
     pattern: '/userfiles((?:/\\w\\w*)*)(?:%21|!)Head[.](\\w+)(?:%21|!)m[.]png[?]imageInfo$',
@@ -157,7 +127,8 @@ const rules = [
     example_output: '/userfiles/000/000/002/17!Head.png!o.png?imageMogr2/thumbnail/480x/quality/48',
     pattern: '/userfiles((?:/\\w\\w*)*)(?:%21|!)Head[.](\\w+)(?:%21|!)m[.]png(?:%21|!)48$',
     repl: '/userfiles${1}!Head.${2}!o.png?imageMogr2/thumbnail/480x/quality/48',
-  }, {
+  },
+  {
     example_input: '/userfiles/000/000/002/17!Head.png!l.png?imageInfo',
     example_output: '/userfiles/000/000/002/17!Head.png!o.png?imageMogr2/thumbnail/720x|imageInfo',
     pattern: '/userfiles((?:/\\w\\w*)*)(?:%21|!)Head[.](\\w+)(?:%21|!)l[.]png[?]imageInfo$',
@@ -175,7 +146,6 @@ const rules = [
     pattern: '/userfiles((?:/\\w\\w*)*)(?:%21|!)Head[.](\\w+)(?:%21|!)o(?:riginal)?[.]png$',
     repl: '/userfiles${1}!Head.${2}!o.png',
   },
-
   {
     example_input: '/userfiles/000/000/002/17!Head.png!l.png!48',
     example_output: '/userfiles/000/000/002/17!Head.png!o.png?imageMogr2/thumbnail/720x/quality/48',
@@ -187,7 +157,8 @@ const rules = [
     example_output: '/userfiles/000/000/002/17!Head.png!o.png',
     pattern: '/userfiles((?:/\\w\\w*)*)(?:%21|!)Head[.](\\w+)(?:%21|!)o(?:riginal)?[.]png(?:%21|!)48$',
     repl: '/userfiles${1}!Head.${2}!o.png',
-  }, {
+  },
+  {
     example_input: '/userfiles/000/000/002/17!Head.png!s.png?imageInfo',
     example_output: '/userfiles/000/000/002/17!Head.png!o.png?imageView2/1/w/192/h/192|imageInfo',
     pattern: '/userfiles((?:/\\w\\w*)*)(?:%21|!)Head[.](\\w+)(?:(?:%21|!)s[.]png)?[?]imageInfo$',
@@ -210,7 +181,8 @@ const rules = [
     example_output: '/userfiles/000/000/002/17!Head.png!o.png?imageView2/1/w/192/h/192/q/48',
     pattern: '/userfiles((?:/\\w\\w*)*)(?:%21|!)Head[.](\\w+)(?:(?:%21|!)s[.]png)?(?:%21|!)48$',
     repl: '/userfiles${1}!Head.${2}!o.png?imageView2/1/w/192/h/192/q/48',
-  }, {
+  },
+  {
     example_input: '/userfiles/000/000/002/17!Head.png!200x200.png?imageInfo',
     example_output: '/userfiles/000/000/002/17!Head.png!o.png?imageView2/1/w/200/h/200|imageInfo',
     pattern: '/userfiles((?:/\\w\\w*)*)(?:%21|!)Head[.](\\w+)(?:%21|!)([1-9]\\d*)x([1-9]\\d*)[.]png[?]imageInfo$',
@@ -233,7 +205,8 @@ const rules = [
     example_output: '/userfiles/000/000/002/17!Head.png!o.png?imageView2/1/w/200/h/200/q/48',
     pattern: '/userfiles((?:/\\w\\w*)*)(?:%21|!)Head[.](\\w+)(?:%21|!)([1-9]\\d*)x([1-9]\\d*)[.]png(?:%21|!)48$',
     repl: '/userfiles${1}!Head.${2}!o.png?imageView2/1/w/${3}/h/${4}/q/48',
-  }, {
+  },
+  {
     example_input: '/userfiles/022/900/481/78855!Head.jpg!mogr.png?imageInfo',
     example_output: '/userfiles/022/900/481/78855!Head.jpg!o.png?imageMogr2/blur/50x50/thumbnail/192x192|imageInfo',
     pattern: '/userfiles((?:/\\w\\w*)*)(?:%21|!)Head[.](\\w+)(?:%21|!)mogr[.]png[?]imageInfo$',
@@ -262,7 +235,8 @@ const rules = [
     example_output: '/userfiles/005/014/705/photos/1428846001472/1428846001472.png!o.png?imageMogr2/thumbnail/480x/quality/48',
     pattern: '/(userfiles|groupfiles)((?:/\\w\\w*)*)/(\\d+)[.](\\w+)(?:%21|!)m[.]png(?:%21|!)48$',
     repl: '/${1}${2}/${3}.${4}!o.png?imageMogr2/thumbnail/480x/quality/48',
-  }, {
+  },
+  {
     example_input: '/userfiles/005/014/705/photos/1428846001472/1428846001472.png!l.png?imageInfo',
     example_output: '/userfiles/005/014/705/photos/1428846001472/1428846001472.png!o.png?imageMogr2/thumbnail/720x|imageInfo',
     pattern: '/(userfiles|groupfiles)((?:/\\w\\w*)*)/(\\d+)[.](\\w+)(?:%21|!)l[.]png[?]imageInfo$',
@@ -291,7 +265,8 @@ const rules = [
     example_output: '/userfiles/005/014/705/photos/1428846001472/1428846001472.png!o.png',
     pattern: '/(userfiles|groupfiles)((?:/\\w\\w*)*)/(\\d+)[.](\\w+)(?:%21|!)o(?:riginal)?[.]png(?:%21|!)48$',
     repl: '/${1}${2}/${3}.${4}!o.png',
-  }, {
+  },
+  {
     example_input: '/userfiles/005/014/705/photos/1428846001472/1428846001472.png!s.png?imageInfo',
     example_output: '/userfiles/005/014/705/photos/1428846001472/1428846001472.png!o.png?imageView2/1/w/192/h/192|imageInfo',
     pattern: '/(userfiles|groupfiles)((?:/\\w\\w*)*)/(\\d+)[.](\\w+)(?:(?:%21|!)s[.]png)?[?]imageInfo$',
@@ -308,7 +283,8 @@ const rules = [
     example_output: '/userfiles/005/014/705/photos/1428846001472/1428846001472.png!o.png?imageView2/1/w/192/h/192/q/48',
     pattern: '/(userfiles|groupfiles)((?:/\\w\\w*)*)/(\\d+)[.](\\w+)(?:(?:%21|!)s[.]png)?(?:%21|!)48$',
     repl: '/${1}${2}/${3}.${4}!o.png?imageView2/1/w/192/h/192/q/48',
-  }, {
+  },
+  {
     example_input: '/userfiles/005/014/705/photos/1428846001472/1428846001472.png!200x200.png?imageInfo',
     example_output: '/userfiles/005/014/705/photos/1428846001472/1428846001472.png!o.png?imageView2/1/w/200/h/200|imageInfo',
     pattern: '/(userfiles|groupfiles)((?:/\\w\\w*)*)/(\\d+)[.](\\w+)(?:%21|!)([1-9]\\d*)x([1-9]\\d*)[.]png[?]imageInfo$',
@@ -325,7 +301,8 @@ const rules = [
     example_output: '/userfiles/005/014/705/photos/1428846001472/1428846001472.png!o.png?imageView2/1/w/200/h/200/q/48',
     pattern: '/(userfiles|groupfiles)((?:/\\w\\w*)*)/(\\d+)[.](\\w+)(?:%21|!)([1-9]\\d*)x([1-9]\\d*)[.]png(?:%21|!)48$',
     repl: '/${1}${2}/${3}.${4}!o.png?imageView2/1/w/${5}/h/${6}/q/48',
-  }, {
+  },
+  {
     example_input: '/userfiles/004/538/761/4538761_26168_1428898495.png!m.png?imageInfo',
     example_output: '/userfiles/004/538/761/4538761_26168_1428898495.png!o.png?imageMogr2/thumbnail/480x|imageInfo',
     pattern: '/(userfiles|ingfiles)((?:/\\w\\w*)*)/([\\d_]+)[.](\\w+)(?:%21|!)m[.]png[?]imageInfo$',
@@ -342,7 +319,8 @@ const rules = [
     example_output: '/userfiles/004/538/761/4538761_26168_1428898495.png!o.png?imageMogr2/thumbnail/480x/quality/48',
     pattern: '/(userfiles|ingfiles)((?:/\\w\\w*)*)/([\\d_]+)[.](\\w+)(?:%21|!)m[.]png(?:%21|!)48$',
     repl: '/${1}${2}/${3}.${4}!o.png?imageMogr2/thumbnail/480x/quality/48',
-  }, {
+  },
+  {
     example_input: '/userfiles/004/538/761/4538761_26168_1428898495.png!l.png?imageInfo',
     example_output: '/userfiles/004/538/761/4538761_26168_1428898495.png!o.png?imageMogr2/thumbnail/720x|imageInfo',
     pattern: '/(userfiles|ingfiles)((?:/\\w\\w*)*)/([\\d_]+)[.](\\w+)(?:%21|!)l[.]png[?]imageInfo$',
@@ -371,7 +349,8 @@ const rules = [
     example_output: '/userfiles/004/538/761/4538761_26168_1428898495.png!o.png',
     pattern: '/(userfiles|ingfiles)((?:/\\w\\w*)*)/([\\d_]+)[.](\\w+)(?:%21|!)o(?:riginal)?[.]png(?:%21|!)48$',
     repl: '/${1}${2}/${3}.${4}!o.png',
-  }, {
+  },
+  {
     example_input: '/userfiles/004/538/761/4538761_26168_1428898495.png!s.png?imageInfo',
     example_output: '/userfiles/004/538/761/4538761_26168_1428898495.png!o.png?imageMogr2/thumbnail/360x|imageInfo',
     pattern: '/(userfiles|ingfiles)((?:/\\w\\w*)*)/([\\d_]+)[.](\\w+)(?:(?:%21|!)s[.]png)?[?]imageInfo$',
@@ -388,7 +367,8 @@ const rules = [
     example_output: '/userfiles/004/538/761/4538761_26168_1428898495.png!o.png?imageMogr2/thumbnail/360x/quality/48',
     pattern: '/(userfiles|ingfiles)((?:/\\w\\w*)*)/([\\d_]+)[.](\\w+)(?:(?:%21|!)s[.]png)?(?:%21|!)48$',
     repl: '/${1}${2}/${3}.${4}!o.png?imageMogr2/thumbnail/360x/quality/48',
-  }, {
+  },
+  {
     example_input: '/userfiles/004/538/761/4538761_26168_1428898495.png!480x720.png?imageInfo',
     example_output: '/userfiles/004/538/761/4538761_26168_1428898495.png!o.png?imageView2/2/w/480/h/720|imageInfo',
     pattern: '/(userfiles|ingfiles)((?:/\\w\\w*)*)/([\\d_]+)[.](\\w+)(?:%21|!)([1-9]\\d*)x([1-9]\\d*)[.]png[?]imageInfo$',
@@ -405,7 +385,8 @@ const rules = [
     example_output: '/userfiles/004/538/761/4538761_26168_1428898495.png!o.png?imageView2/2/w/480/h/720/q/48',
     pattern: '/(userfiles|ingfiles)((?:/\\w\\w*)*)/([\\d_]+)[.](\\w+)(?:%21|!)([1-9]\\d*)x([1-9]\\d*)[.]png(?:%21|!)48$',
     repl: '/${1}${2}/${3}.${4}!o.png?imageView2/2/w/${5}/h/${6}/q/48',
-  }, {
+  },
+  {
     pattern: '/blued/mrright.+$',
     repl: '${0}?imageMogr2/thumbnail/!33p',
     example_input: '/blued/mrright/408119/408119_1433488325.png',
@@ -470,7 +451,8 @@ const rules = [
     repl: '/topics/${1}.${2}?imageView2/1/w/${3}/h/${4}/q/48',
     example_input: '/topics/20150615_12_1434337587.jpg!200x200.png!48',
     example_output: '/topics/20150615_12_1434337587.jpg?imageView2/1/w/200/h/200/q/48',
-  }, {
+  },
+  {
     pattern: '/(livefiles|userfiles)((?:/\\w\\w*)*)/([\\d_]+)[.]png(?:(?:%21|!)750x396[.]png)?$',
     repl: '/${1}${2}/${3}.png!o.png?imageMogr2/thumbnail/!750x396r/gravity/Center/crop/750x396/dx/0/dy/0',
     example_input: '/livefiles/000/000/098/photos/98_35196_1447573874.png!750x396.png',
@@ -517,7 +499,8 @@ const rules = [
     repl: '/${1}${2}/${3}.png!o.png?imageMogr2/thumbnail/!${4}x${5}r/gravity/Center/crop/${4}x${5}/dx/0/dy/0/quality/48',
     example_input: '/livefiles/000/000/098/photos/98_35196_1447573874.png!200x400.png!48',
     example_output: '/livefiles/000/000/098/photos/98_35196_1447573874.png!o.png?imageMogr2/thumbnail/!200x400r/gravity/Center/crop/200x400/dx/0/dy/0/quality/48',
-  }, {
+  },
+  {
     pattern: '/advertise((?:/\\w\\w*)*)/([\\w-]+)[.](\\w+)(?:%21|!)m[.]png[?]imageInfo$',
     repl: '/advertise${1}/${2}.${3}?imageMogr2/thumbnail/480x|imageInfo',
     example_input: '/advertise/pics/f99687dd719c4e8bc6a39e946c3d9ef7-1463645316-10851.png!m.png?imageInfo',
@@ -534,7 +517,8 @@ const rules = [
     repl: '/advertise${1}/${2}.${3}?imageMogr2/thumbnail/480x/quality/48',
     example_input: '/advertise/pics/f99687dd719c4e8bc6a39e946c3d9ef7-1463645316-10851.png!m.png!48',
     example_output: '/advertise/pics/f99687dd719c4e8bc6a39e946c3d9ef7-1463645316-10851.png?imageMogr2/thumbnail/480x/quality/48',
-  }, {
+  },
+  {
     pattern: '/advertise((?:/\\w\\w*)*)/([\\w-]+)[.](\\w+)(?:%21|!)l[.]png[?]imageInfo$',
     repl: '/advertise${1}/${2}.${3}?imageMogr2/thumbnail/720x|imageInfo',
     example_input: '/advertise/pics/f99687dd719c4e8bc6a39e946c3d9ef7-1463645316-10851.png!l.png?imageInfo',
@@ -563,7 +547,8 @@ const rules = [
     repl: '/advertise${1}/${2}.${3}',
     example_input: '/advertise/pics/f99687dd719c4e8bc6a39e946c3d9ef7-1463645316-10851.png!o.png!48',
     example_output: '/advertise/pics/f99687dd719c4e8bc6a39e946c3d9ef7-1463645316-10851.png',
-  }, {
+  },
+  {
     pattern: '/advertise((?:/\\w\\w*)*)/([\\w-]+)[.](\\w+)(?:(?:%21|!)s[.]png)?[?]imageInfo$',
     repl: '/advertise${1}/${2}.${3}?imageMogr2/thumbnail/360x|imageInfo',
     example_input: '/advertise/pics/f99687dd719c4e8bc6a39e946c3d9ef7-1463645316-10851.png!s.png?imageInfo',
@@ -580,7 +565,8 @@ const rules = [
     repl: '/advertise${1}/${2}.${3}?imageMogr2/thumbnail/360x/quality/48',
     example_input: '/advertise/pics/f99687dd719c4e8bc6a39e946c3d9ef7-1463645316-10851.png!s.png!48',
     example_output: '/advertise/pics/f99687dd719c4e8bc6a39e946c3d9ef7-1463645316-10851.png?imageMogr2/thumbnail/360x/quality/48',
-  }, {
+  },
+  {
     pattern: '/advertise((?:/\\w\\w*)*)/([\\w-]+)[.](\\w+)(?:%21|!)([1-9]\\d*)x([1-9]\\d*)[.]png[?]imageInfo$',
     repl: '/advertise${1}/${2}.${3}?imageView2/2/w/${4}/h/${5}|imageInfo',
     example_input: '/advertise/pics/f99687dd719c4e8bc6a39e946c3d9ef7-1463645316-10851.png!480x720.png?imageInfo',
@@ -599,6 +585,29 @@ const rules = [
     example_output: '/advertise/pics/f99687dd719c4e8bc6a39e946c3d9ef7-1463645316-10851.png?imageView2/2/w/480/h/720/q/48',
   },
   {
+    pattern: '/userfiles((?:/\\w\\w*)*)(?:%21|!)Background[.]jpg(?:%21|!)([1-9]\\d*)x([1-9]\\d*)[.]png$',
+    repl: '/userfiles${1}!Background.jpg!o.png?imageView2/2/w/${2}/h/${3}',
+    example_input: '/userfiles/009/334/225/85338!Background.jpg!640x1090.png',
+    example_output: '/userfiles/009/334/225/85338!Background.jpg!o.png?imageView2/2/w/640/h/1090',
+    async process(pathname, match) {
+      const key = `userfiles${match[1]}!Background.jpg!o.png`;
+      const w = parseInt(match[2], 10);
+      const h = parseInt(match[3], 10);
+      if (Number.isNaN(w) || w <= 0) {
+        throw createError(400, 'Invalid width');
+      }
+      if (Number.isNaN(h) || h <= 0) {
+        throw createError(400, 'Invalid height');
+      }
+      const buffer = await store.get(key);
+      const iv2 = new ImageView2(sharp(buffer));
+
+      const out = await iv2.m(2).w(w).h(h).process();
+
+      return out.toBuffer({ resolveWithObject: true });
+    },
+  },
+  {
     pattern: '/userfiles((?:/\\w\\w*)*)(?:%21|!)Background[.]jpg(?:%21|!)o(?:riginal)?[.]png$',
     repl: '/userfiles${1}!Background.jpg!o.png',
     example_input: '/userfiles/009/334/221/37115!Background.jpg!original.png',
@@ -611,10 +620,40 @@ const rules = [
     example_output: '/userfiles/009/334/225/85338!Background.jpg!o.png?imageView2/2/w/480/h/820',
   },
   {
+    pattern: '/userfiles((?:/\\w\\w*)*)(?:%21|!)Background[.]jpg(?:%21|!)([1-9]\\d*)x([1-9]\\d*)[.]png(?:%21|!)48$',
+    repl: '/userfiles${1}!Background.jpg!o.png?imageView2/2/w/${2}/h/${3}/q/48',
+    example_input: '/userfiles/009/334/225/85338!Background.jpg!640x1090.png!48',
+    example_output: '/userfiles/009/334/225/85338!Background.jpg!o.png?imageView2/2/w/640/h/1090/q/48',
+    async process(pathname, match) {
+      const key = `userfiles${match[1]}!Background.jpg!o.png`;
+      const w = parseInt(match[2], 10);
+      const h = parseInt(match[3], 10);
+      if (Number.isNaN(w) || w <= 0) {
+        throw createError(400, 'Invalid width');
+      }
+      if (Number.isNaN(h) || h <= 0) {
+        throw createError(400, 'Invalid height');
+      }
+      const buffer = await store.get(key);
+      const iv2 = new ImageView2(sharp(buffer));
+
+      const out = await iv2.m(2).w(w).h(h).q(48)
+        .process();
+
+      return out.toBuffer({ resolveWithObject: true });
+    },
+  },
+  {
     pattern: '/userfiles((?:/\\w\\w*)*)(?:%21|!)Background[.]jpg(?:%21|!)o(?:riginal)?[.]png(?:%21|!)48$',
     repl: '/userfiles${1}!Background.jpg!o.png',
     example_input: '/userfiles/009/334/221/37115!Background.jpg!original.png!48',
     example_output: '/userfiles/009/334/221/37115!Background.jpg!o.png',
+  },
+  {
+    pattern: '/userfiles((?:/\\w\\w*)*)(?:%21|!)Background[.]jpg(?:%21|!)48$',
+    repl: '/userfiles${1}!Background.jpg!o.png?imageView2/2/w/480/h/820/q/48',
+    example_input: '/userfiles/009/334/225/85338!Background.jpg!48',
+    example_output: '/userfiles/009/334/225/85338!Background.jpg!o.png?imageView2/2/w/480/h/820/q/48',
   },
 ];
 
