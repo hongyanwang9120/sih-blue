@@ -40,3 +40,18 @@ it('imageView2/1/w/100/h/100', async () => {
   expect(info.width).toBe(100);
   expect(info.height).toBe(100);
 });
+
+it('imageView2/1/w/100/h/100 string', async () => {
+  const image = sharp(await store.get('gogopher.jpg'));
+  const iv2 = new ImageView2(image);
+  await iv2
+    .m(1)
+    .w('100')
+    .h('100')
+    .process();
+
+  const { info } = await image.toBuffer({ resolveWithObject: true });
+
+  expect(info.width).toBe(100);
+  expect(info.height).toBe(100);
+});

@@ -38,7 +38,11 @@ class ImageView2 {
    * @returns this
    */
   w(v) {
-    this._w = v;
+    const width = parseInt(v, 10);
+    if (Number.isNaN(width) || width <= 0) {
+      throw createError(400, 'Invalid width');
+    }
+    this._w = width;
     return this;
   }
 
@@ -48,7 +52,11 @@ class ImageView2 {
    * @returns this
    */
   h(v) {
-    this._h = v;
+    const height = parseInt(v, 10);
+    if (Number.isNaN(height) || height <= 0) {
+      throw createError(400, 'Invalid height');
+    }
+    this._h = height;
     return this;
   }
 

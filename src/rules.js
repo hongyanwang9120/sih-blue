@@ -591,18 +591,10 @@ const rules = [
     example_output: '/userfiles/009/334/225/85338!Background.jpg!o.png?imageView2/2/w/640/h/1090',
     async process(pathname, match) {
       const key = `userfiles${match[1]}!Background.jpg!o.png`;
-      const w = parseInt(match[2], 10);
-      const h = parseInt(match[3], 10);
-      if (Number.isNaN(w) || w <= 0) {
-        throw createError(400, 'Invalid width');
-      }
-      if (Number.isNaN(h) || h <= 0) {
-        throw createError(400, 'Invalid height');
-      }
       const buffer = await store.get(key);
       const iv2 = new ImageView2(sharp(buffer));
 
-      const out = await iv2.m(2).w(w).h(h).process();
+      const out = await iv2.m(2).w(match[2]).h(match[3]).process();
 
       return out.toBuffer({ resolveWithObject: true });
     },
@@ -626,18 +618,10 @@ const rules = [
     example_output: '/userfiles/009/334/225/85338!Background.jpg!o.png?imageView2/2/w/640/h/1090/q/48',
     async process(pathname, match) {
       const key = `userfiles${match[1]}!Background.jpg!o.png`;
-      const w = parseInt(match[2], 10);
-      const h = parseInt(match[3], 10);
-      if (Number.isNaN(w) || w <= 0) {
-        throw createError(400, 'Invalid width');
-      }
-      if (Number.isNaN(h) || h <= 0) {
-        throw createError(400, 'Invalid height');
-      }
       const buffer = await store.get(key);
       const iv2 = new ImageView2(sharp(buffer));
 
-      const out = await iv2.m(2).w(w).h(h).q(48)
+      const out = await iv2.m(2).w(match[2]).h(match[3]).q(48)
         .process();
 
       return out.toBuffer({ resolveWithObject: true });
