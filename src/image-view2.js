@@ -21,7 +21,7 @@ class ImageView2 {
 
   /**
    * Mode
-   * @param {*} v
+   * @param {0 | 1 | 2 | 3 | 4 | 5} v
    * @returns this
    */
   m(v) {
@@ -34,7 +34,7 @@ class ImageView2 {
 
   /**
    * Width
-   * @param {*} v
+   * @param {Number | String} v
    * @returns this
    */
   w(v) {
@@ -48,7 +48,7 @@ class ImageView2 {
 
   /**
    * Height
-   * @param {*} v
+   * @param {Number | String} v
    * @returns this
    */
   h(v) {
@@ -62,7 +62,7 @@ class ImageView2 {
 
   /**
    * Quality
-   * @param {*} v
+   * @param {Number} v
    * @returns this
    */
   q(v) {
