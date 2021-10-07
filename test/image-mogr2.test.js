@@ -89,3 +89,25 @@ it('thumbnail/invalid', async () => {
 
   expect(fn).toThrowError(/Invalid thumbnail query/);
 });
+
+it('thumbnail/gravity/Center/crop/100x100/dx/0/dy/0', async () => {
+  const image = sharp(await store.get('gogopher.jpg'));
+  const im2 = new ImageMogr2(image);
+  await im2.crop(100, 100, 'center').process();
+
+  const { info } = await image.toBuffer({ resolveWithObject: true });
+
+  expect(info.width).toBe(100);
+  expect(info.height).toBe(100);
+});
+
+it('thumbnail/!100x100r/gravity/Center/crop/100x100/dx/0/dy/0', async () => {
+  const image = sharp(await store.get('gogopher.jpg'));
+  const im2 = new ImageMogr2(image);
+  await im2.thumbnail('!100x100r').crop(100, 100, 'center').process();
+
+  const { info } = await image.toBuffer({ resolveWithObject: true });
+
+  expect(info.width).toBe(100);
+  expect(info.height).toBe(100);
+});
