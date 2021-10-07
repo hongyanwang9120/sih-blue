@@ -1,3 +1,4 @@
+/* eslint-disable no-bitwise */
 const sharp = require('sharp');
 const createError = require('http-errors');
 
@@ -11,12 +12,13 @@ class ImageMogr2 {
     }
     this._image = image;
     this._thumbnail = async () => {};
+    this._crop = async () => {};
   }
 
   /**
    * https://developer.qiniu.com/dora/8255/the-zoom
-   * @param {*} v
-   * @returns
+   * @param {String} v
+   * @returns this
    */
   thumbnail(v) {
     const rules = [
@@ -105,11 +107,47 @@ class ImageMogr2 {
     throw createError(400, 'Invalid thumbnail query');
   }
 
+  /**
+   *
+   * @param {Number} w
+   * @param {Number} h
+   * @param {String} gravity
+   * @returns this
+   */
+  crop(w, h, gravity) {
+    if (gravity === 'center') {
+      this._crop = async () => {
+        const buffer = await this._image.toBuffer();
+        const metadata = await sharp(buffer).metadata();
+        if (metadata.width && metadata.height) {
+          const x = (metadata.width - w) >> 1;
+          const y = (metadata.height - h) >> 1;
+          const region = {
+            left: x,
+            top: y,
+            width: w,
+            height: h,
+          };
+
+          this._image.extract(region);
+        } else {
+          console.warn('Cannot fetch width/height in metadata');
+        }
+      };
+    } else {
+      throw createError(400, 'Invalid crop gravity');
+    }
+    return this;
+  }
+
   async process() {
     const image = this._image;
 
     if (this._thumbnail) {
       await this._thumbnail();
+    }
+    if (this._crop) {
+      await this._crop();
     }
 
     return image;
