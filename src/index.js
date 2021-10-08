@@ -5,8 +5,7 @@ exports.handler = async function (event) {
 
   try {
 
-    const processFunc = rules.find(event.path);
-    const processFunc = rules.find(event.rawPath);  //bluedsy
+    const processFunc = rules.find(event.path || event.rawPath);
     if (processFunc) {
       const { data, info } = await processFunc();
       return {

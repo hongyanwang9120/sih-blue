@@ -2,6 +2,8 @@
 const sharp = require('sharp');
 const createError = require('http-errors');
 
+const JPG = 'jpg';
+const JPEG = sharp.format.jpeg.id;
 class ImageMogr2 {
   constructor(image) {
     if (!image) {
@@ -24,7 +26,7 @@ class ImageMogr2 {
    * @returns this
    */
     q(v) {
-      if(!isNaN(v)) throw createError(400, 'Invalid input');
+      if(isNaN(v)) throw createError(400, 'Invalid input');
       this._q = v;
       return this;
     }
@@ -167,11 +169,12 @@ class ImageMogr2 {
   async process() {
     const image = this._image;
 
-    if (this._q) {
+    
+    if (this._q && (JPEG === metadata.format || JPG === metadata.format)) {
       image.jpeg({ quality: this._q });
     }
     if (this._b) {
-      image.blur(50*50);
+      image.blur(50);
     }
     if (this._thumbnail) {
       await this._thumbnail();
@@ -184,5 +187,5 @@ class ImageMogr2 {
   }
 }
 
-exports.ImageView2 = ImageView2;
+exports.ImageMogr2 = ImageMogr2;
 
