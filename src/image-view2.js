@@ -21,7 +21,7 @@ class ImageView2 {
 
   /**
    * Mode
-   * @param {*} v
+   * @param {0 | 1 | 2 | 3 | 4 | 5} v
    * @returns this
    */
   m(v) {
@@ -34,29 +34,35 @@ class ImageView2 {
 
   /**
    * Width
-   * @param {*} v
+   * @param {Number | String} v
    * @returns this
    */
   w(v) {
-    if(!isNaN(v)) throw createError(400, 'Invalid input');
-    this._w = v;
+    const width = parseInt(v, 10);
+    if (Number.isNaN(width) || width <= 0) {
+      throw createError(400, 'Invalid width');
+    }
+    this._w = width;
     return this;
   }
 
   /**
    * Height
-   * @param {*} v
+   * @param {Number | String} v
    * @returns this
    */
   h(v) {
-    if(!isNaN(v)) throw createError(400, 'Invalid input');
-    this._h = v;
+    const height = parseInt(v, 10);
+    if (Number.isNaN(height) || height <= 0) {
+      throw createError(400, 'Invalid height');
+    }
+    this._h = height;
     return this;
   }
 
   /**
    * Quality
-   * @param {*} v
+   * @param {Number} v
    * @returns this
    */
   q(v) {

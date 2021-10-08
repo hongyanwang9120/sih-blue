@@ -22,7 +22,7 @@ class ImageInfo {
       width: metadata.width,
       height: metadata.height,
       colorModel: metadata.space,
-      orientation: metadata.orientation, // TODO: convert number ot string
+      // orientation: metadata.orientation, // TODO: convert number ot string
     };
   }
 }

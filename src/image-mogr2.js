@@ -1,8 +1,6 @@
+/* eslint-disable no-bitwise */
 const sharp = require('sharp');
 const createError = require('http-errors');
-
-const JPG = 'jpg';
-const JPEG = sharp.format.jpeg.id;
 
 class ImageMogr2 {
   constructor(image) {
@@ -13,31 +11,12 @@ class ImageMogr2 {
       throw createError(500, 'Image must be a sharp object');
     }
     this._image = image;
-    this._w = 0;
-    this._h = 0;
     this._b = false;
     this._q = 75;
+    this._thumbnail = async () => {};
+    this._crop = async () => {};
   }
   
-  /**
-   * Width
-   * @param {*} v
-   * @returns this
-   */
-   w(v) {
-    this._w = v;
-    return this;
-  }
-
-  /**
-   * Height
-   * @param {*} v
-   * @returns this
-   */
-  h(v) {
-    this._h = v;
-    return this;
-  }
 
    /**
    * Quality
@@ -45,6 +24,7 @@ class ImageMogr2 {
    * @returns this
    */
     q(v) {
+      if(!isNaN(v)) throw createError(400, 'Invalid input');
       this._q = v;
       return this;
     }
@@ -59,21 +39,150 @@ class ImageMogr2 {
     return this;
   }
 
+  /**
+   * https://developer.qiniu.com/dora/8255/the-zoom
+   * @param {String} v
+   * @returns this
+   */
+  thumbnail(v) {
+    const rules = [
+      {
+        pattern: /^(\d+)x$/m, // thumbnail/100x
+        proc: async (m) => {
+          const w = Number.parseInt(m[1], 10);
+          if (Number.isNaN(w) || w <= 0) {
+            throw createError(400, 'Invalid /thumbnail/<Width>x');
+          }
+          this._image.resize(w);
+        },
+      },
+      {
+        pattern: /^!(\d+)p$/m, // thumbnail/!10p
+        proc: async (m) => {
+          const percent = Number.parseInt(m[1], 10);
+          if (Number.isNaN(percent) || percent <= 0) {
+            throw createError(400, 'Invalid /thumbnail/!<Scale>p');
+          }
+          const metadata = await this._image.metadata();
+          if (metadata.width && metadata.height) {
+            this._image.resize(Math.round(metadata.width * percent * 0.01));
+          } else {
+            console.warn('Cannot fetch width/height in metadata');
+          }
+        },
+      },
+      {
+        pattern: /^!(\d+)x(\d+)r$/m, // thumbnail/!100x100r
+        proc: async (m) => {
+          const w = Number.parseInt(m[1], 10);
+          const h = Number.parseInt(m[2], 10);
+          if (Number.isNaN(w) || w <= 0) {
+            throw createError(400, 'Invalid /thumbnail/<Width>x<Height>');
+          }
+          if (Number.isNaN(h) || h <= 0) {
+            throw createError(400, 'Invalid /thumbnail/<Width>x<Height>');
+          }
+          const metadata = await this._image.metadata();
+          if (metadata.width && metadata.height) {
+            const scaleX = w / metadata.width;
+            const scaleY = h / metadata.height;
+            const scale = Math.max(scaleX, scaleY);
+
+            this._image.resize(Math.round(metadata.width * scale));
+          } else {
+            console.warn('Cannot fetch width/height in metadata');
+          }
+        },
+      },
+      {
+        pattern: /^(\d+)x(\d+)$/m, // thumbnail/100x100
+        proc: async (m) => {
+          const w = Number.parseInt(m[1], 10);
+          const h = Number.parseInt(m[2], 10);
+          if (Number.isNaN(w) || w <= 0) {
+            throw createError(400, 'Invalid /thumbnail/<Width>x<Height>');
+          }
+          if (Number.isNaN(h) || h <= 0) {
+            throw createError(400, 'Invalid /thumbnail/<Width>x<Height>');
+          }
+          const metadata = await this._image.metadata();
+          if (metadata.width && metadata.height) {
+            const scaleX = w / metadata.width;
+            const scaleY = h / metadata.height;
+            const scale = Math.min(scaleX, scaleY);
+
+            this._image.resize(Math.round(metadata.width * scale));
+          } else {
+            console.warn('Cannot fetch width/height in metadata');
+          }
+        },
+      },
+    ];
+
+    // eslint-disable-next-line no-restricted-syntax
+    for (const r of rules) {
+      const m = v.match(r.pattern);
+      if (m) {
+        this._thumbnail = () => r.proc(m);
+        return this;
+      }
+    }
+
+    throw createError(400, 'Invalid thumbnail query');
+  }
+
+  /**
+   *
+   * @param {Number} w
+   * @param {Number} h
+   * @param {String} gravity
+   * @returns this
+   */
+  crop(w, h, gravity) {
+    if (gravity === 'center') {
+      this._crop = async () => {
+        const buffer = await this._image.toBuffer();
+        const metadata = await sharp(buffer).metadata();
+        if (metadata.width && metadata.height) {
+          const x = (metadata.width - w) >> 1;
+          const y = (metadata.height - h) >> 1;
+          const region = {
+            left: x,
+            top: y,
+            width: w,
+            height: h,
+          };
+
+          this._image.extract(region);
+        } else {
+          console.warn('Cannot fetch width/height in metadata');
+        }
+      };
+    } else {
+      throw createError(400, 'Invalid crop gravity');
+    }
+    return this;
+  }
+
   async process() {
     const image = this._image;
-    const metadata = await image.metadata();
-    if (this._w || this._h) {
-      image.resize(this._w, this._h);
-    }
-    if (this._q && (JPEG === metadata.format || JPG === metadata.format)) {
+
+    if (this._q) {
       image.jpeg({ quality: this._q });
     }
-    if (this._b && (JPEG === metadata.format || JPG === metadata.format)) {
+    if (this._b) {
       image.blur(50*50);
+    }
+    if (this._thumbnail) {
+      await this._thumbnail();
+    }
+    if (this._crop) {
+      await this._crop();
     }
 
     return image;
   }
 }
 
-exports.ImageMogr2 = ImageMogr2;
+exports.ImageView2 = ImageView2;
+
