@@ -26,7 +26,7 @@ class ImageMogr2 {
    * @returns this
    */
     q(v) {
-      if(isNaN(v)) throw createError(400, 'Invalid input');
+      if(Number.isNaN(v)) throw createError(400, 'Invalid input');
       this._q = v;
       return this;
     }
@@ -168,7 +168,7 @@ class ImageMogr2 {
 
   async process() {
     const image = this._image;
-
+    const metadata = await image.metadata();
     
     if (this._q && (JPEG === metadata.format || JPG === metadata.format)) {
       image.jpeg({ quality: this._q });

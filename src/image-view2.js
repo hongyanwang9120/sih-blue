@@ -66,7 +66,7 @@ class ImageView2 {
    * @returns this
    */
   q(v) {
-    if(!isNaN(v)) throw createError(400, 'Invalid input');
+    if(Number.isNaN(v)) throw createError(400, 'Invalid input');
     this._q = v;
     return this;
   }
