@@ -129,7 +129,7 @@ it('/userfiles/000/000/002/17!Head.png!m.png?imageInfo', async () => {
     colorModel: 'srgb',
     format: 'jpeg',
     height: 320,
-    size: 26439,
+    size: 23289,
     width: 480,
   });
 });
