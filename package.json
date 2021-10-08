@@ -8,7 +8,7 @@
   "private": true,
   "scripts": {
     "eslint": "eslint --fix src test",
-    "test": "jest",
+    "test": "export NODE_ENV=dev && jest",
     "package:clean": "rm -rf node_modules/ dist/ && mkdir -p dist/nodejs",
     "package:layer": "mv node_modules dist/nodejs/ && cd dist/ && zip -rq layer.zip . && cd ..",
     "package:src": "cd src/ && zip -rq src.zip . && mv src.zip ../dist/ && cd ..",
