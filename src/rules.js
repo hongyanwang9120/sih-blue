@@ -1,10 +1,11 @@
 const sharp = require('sharp');
 const createError = require('http-errors');
-const { S3Store } = require('./store');
+const { createStore } = require('./store');
 const { ImageView2 } = require('./image-view2');
+const { ImageMogr2 } = require('./image-mogr2');
+const { ImageInfo } = require('./image-info');
 
-const bucket = (process.env.SOURCE_BUCKETS || '').split(',')[0];
-const store = new S3Store(bucket);
+const store = createStore();
 
 const rules = [
   {
@@ -115,6 +116,15 @@ const rules = [
     example_output: '/userfiles/000/000/002/17!Head.png!o.png?imageMogr2/thumbnail/480x|imageInfo',
     pattern: '/userfiles((?:/\\w\\w*)*)(?:%21|!)Head[.](\\w+)(?:%21|!)m[.]png[?]imageInfo$',
     repl: '/userfiles${1}!Head.${2}!o.png?imageMogr2/thumbnail/480x|imageInfo',
+    async process(pathname, match) {
+      const key = `userfiles${match[1]}!Head.${match[2]}!o.png`;
+      const buffer = await store.get(key);
+      const im2 = new ImageMogr2(sharp(buffer));
+      const out = await im2.thumbnail('480x').process();
+      const ii = new ImageInfo(sharp(await out.toBuffer()));
+
+      return ii.process();
+    },
   },
   {
     example_input: '/userfiles/000/000/002/17!Head.png!m.png',
@@ -397,6 +407,14 @@ const rules = [
     repl: '/topics/${1}.${2}?imageMogr2/thumbnail/480x',
     example_input: '/topics/20150615_12_1434337587.jpg!m.png',
     example_output: '/topics/20150615_12_1434337587.jpg?imageMogr2/thumbnail/480x',
+    async process(pathname, match) {
+      const key = `topics/${match[1]}.${match[2]}`;
+      const buffer = await store.get(key);
+      const im2 = new ImageMogr2(sharp(buffer));
+      const out = await im2.thumbnail('480x').process();
+
+      return out.toBuffer({ resolveWithObject: true });
+    },
   },
   {
     pattern: '/topics/([\\d_]+)[.](\\w+)(?:%21|!)l[.]png$',
@@ -457,6 +475,14 @@ const rules = [
     repl: '/${1}${2}/${3}.png!o.png?imageMogr2/thumbnail/!750x396r/gravity/Center/crop/750x396/dx/0/dy/0',
     example_input: '/livefiles/000/000/098/photos/98_35196_1447573874.png!750x396.png',
     example_output: '/livefiles/000/000/098/photos/98_35196_1447573874.png!o.png?imageMogr2/thumbnail/!750x396r/gravity/Center/crop/750x396/dx/0/dy/0',
+    async process(pathname, match) {
+      const key = `${match[1]}${match[2]}/${match[3]}.png!o.png`;
+      const buffer = await store.get(key);
+      const im2 = new ImageMogr2(sharp(buffer));
+      const out = await im2.thumbnail('!750x396r').crop(750, 396, 'center').process();
+
+      return out.toBuffer({ resolveWithObject: true });
+    },
   },
   {
     pattern: '/(livefiles|userfiles)((?:/\\w\\w*)*)/([\\d_]+)[.]png(?:%21|!)(?:750x190|m)[.]png$',
@@ -649,8 +675,19 @@ exports.find = function (pathname) {
   for (const rule of rules) {
     const m = pathname.match(rule.pattern);
     if (m && rule.process) {
-      const fn = function () {
-        return rule.process.bind(rule)(pathname, m);
+      const fn = async function () {
+        const o = await rule.process.bind(rule)(pathname, m);
+        if (o.data && o.info && Buffer.isBuffer(o.data)) {
+          return {
+            data: o.data.toString('base64'),
+            info: o.info,
+            isBase64Encoded: true,
+          };
+        }
+        return {
+          data: JSON.stringify(o),
+          info: { format: 'application/json' },
+        };
       };
       fn.rule = rule;
       return fn;

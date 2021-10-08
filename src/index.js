@@ -1,36 +1,33 @@
 const rules = require('./rules');
 
+function errorResp(code, obj) {
+  return {
+    statusCode: code,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(obj),
+  };
+}
+
 exports.handler = async function (event) {
   console.log('request:', JSON.stringify(event, undefined, 2));
 
   try {
     const processFunc = rules.find(event.path);
     if (processFunc) {
-      const { data, info } = await processFunc();
+      const { data, info, isBase64Encoded } = await processFunc();
       return {
-        isBase64Encoded: true,
+        isBase64Encoded,
         statusCode: 200,
         headers: { 'Content-Type': info.format },
-        body: data.toString('base64'),
+        body: data,
       };
     }
-    return {
-      statusCode: 400,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: 'Can NOT match rules' }),
-    };
+    return errorResp(400, { message: 'Can NOT match rules' });
   } catch (e) {
+    console.error(e);
     if (e.statusCode) {
-      return {
-        statusCode: e.statusCode,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(e),
-      };
+      return errorResp(e.statusCode, e);
     }
-    return {
-      statusCode: 500,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: 'Internal error' }),
-    };
+    return errorResp(500, { message: 'Internal error' });
   }
 };
