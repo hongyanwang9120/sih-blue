@@ -445,36 +445,92 @@ const rules = [
     example_output: '/userfiles/022/900/481/78855!Head.jpg!o.png?imageMogr2/blur/50x50/thumbnail/192x192',
     pattern: '/userfiles((?:/\\w\\w*)*)(?:%21|!)Head[.](\\w+)(?:%21|!)mogr[.]png$',
     repl: '/userfiles${1}!Head.${2}!o.png?imageMogr2/blur/50x50/thumbnail/192x192',
+    async process(pathname, match) {
+      const key = `userfiles${match[1]}!Head.${match[2]}!o.png`;
+      const buffer = await store.get(key);
+      const im2 = new ImageMogr2(sharp(buffer));
+      const out = await im2.b(true).thumbnail('192x192').process();
+      return out.toBuffer({
+        resolveWithObject: true,
+      });
+    },
   },
   {
     example_input: '/userfiles/005/014/705/photos/1428846001472/1428846001472.png!m.png?imageInfo',
     example_output: '/userfiles/005/014/705/photos/1428846001472/1428846001472.png!o.png?imageMogr2/thumbnail/480x|imageInfo',
     pattern: '/(userfiles|groupfiles)((?:/\\w\\w*)*)/(\\d+)[.](\\w+)(?:%21|!)m[.]png[?]imageInfo$',
     repl: '/${1}${2}/${3}.${4}!o.png?imageMogr2/thumbnail/480x|imageInfo',
+    async process(pathname, match) {
+      const key = `${match[1]}${match[2]}/${match[3]}.${match[4]}!o.png`;
+      const buffer = await store.get(key);
+      const im2 = new ImageMogr2(sharp(buffer));
+      const out = await im2.thumbnail('480x').process();
+      const outFile = new ImageInfo(out);
+      return outFile.toBuffer({
+        resolveWithObject: true,
+      });
+    },
   },
   {
     example_input: '/userfiles/005/014/705/photos/1428846001472/1428846001472.png!m.png',
     example_output: '/userfiles/005/014/705/photos/1428846001472/1428846001472.png!o.png?imageMogr2/thumbnail/480x',
     pattern: '/(userfiles|groupfiles)((?:/\\w\\w*)*)/(\\d+)[.](\\w+)(?:%21|!)m[.]png$',
     repl: '/${1}${2}/${3}.${4}!o.png?imageMogr2/thumbnail/480x',
+    async process(pathname, match) {
+      const key = `${match[1]}${match[2]}/${match[3]}.${match[4]}!o.png`;
+      const buffer = await store.get(key);
+      const im2 = new ImageMogr2(sharp(buffer));
+      const out = await im2.thumbnail('480x').process();
+      return out.toBuffer({
+        resolveWithObject: true,
+      });
+    },
   },
   {
     example_input: '/userfiles/005/014/705/photos/1428846001472/1428846001472.png!m.png!48',
     example_output: '/userfiles/005/014/705/photos/1428846001472/1428846001472.png!o.png?imageMogr2/thumbnail/480x/quality/48',
     pattern: '/(userfiles|groupfiles)((?:/\\w\\w*)*)/(\\d+)[.](\\w+)(?:%21|!)m[.]png(?:%21|!)48$',
     repl: '/${1}${2}/${3}.${4}!o.png?imageMogr2/thumbnail/480x/quality/48',
+    async process(pathname, match) {
+      const key = `${match[1]}${match[2]}/${match[3]}.${match[4]}!o.png`;
+      const buffer = await store.get(key);
+      const im2 = new ImageMogr2(sharp(buffer));
+      const out = await im2.thumbnail('480x').q(48).process();
+      return out.toBuffer({
+        resolveWithObject: true,
+      });
+    },
   },
   {
     example_input: '/userfiles/005/014/705/photos/1428846001472/1428846001472.png!l.png?imageInfo',
     example_output: '/userfiles/005/014/705/photos/1428846001472/1428846001472.png!o.png?imageMogr2/thumbnail/720x|imageInfo',
     pattern: '/(userfiles|groupfiles)((?:/\\w\\w*)*)/(\\d+)[.](\\w+)(?:%21|!)l[.]png[?]imageInfo$',
     repl: '/${1}${2}/${3}.${4}!o.png?imageMogr2/thumbnail/720x|imageInfo',
+    async process(pathname, match) {
+      const key = `${match[1]}${match[2]}/${match[3]}.${match[4]}!o.png`;
+      const buffer = await store.get(key);
+      const im2 = new ImageMogr2(sharp(buffer));
+      const out = await im2.thumbnail('720x').process();
+      const outFile = new ImageInfo(out);
+      return outFile.toBuffer({
+        resolveWithObject: true,
+      });
+    },
   },
   {
     example_input: '/userfiles/005/014/705/photos/1428846001472/1428846001472.png!l.png',
     example_output: '/userfiles/005/014/705/photos/1428846001472/1428846001472.png!o.png?imageMogr2/thumbnail/720x',
     pattern: '/(userfiles|groupfiles)((?:/\\w\\w*)*)/(\\d+)[.](\\w+)(?:%21|!)l[.]png$',
     repl: '/${1}${2}/${3}.${4}!o.png?imageMogr2/thumbnail/720x',
+    async process(pathname, match) {
+      const key = `${match[1]}${match[2]}/${match[3]}.${match[4]}!o.png`;
+      const buffer = await store.get(key);
+      const im2 = new ImageMogr2(sharp(buffer));
+      const out = await im2.thumbnail('720x').process();
+      return out.toBuffer({
+        resolveWithObject: true,
+      });
+    },
   },
   {
     example_input: '/userfiles/005/014/705/photos/1428846001472/1428846001472.png!original.png',
@@ -495,6 +551,15 @@ const rules = [
     example_output: '/userfiles/005/014/705/photos/1428846001472/1428846001472.png!o.png?imageMogr2/thumbnail/720x/quality/48',
     pattern: '/(userfiles|groupfiles)((?:/\\w\\w*)*)/(\\d+)[.](\\w+)(?:%21|!)l[.]png(?:%21|!)48$',
     repl: '/${1}${2}/${3}.${4}!o.png?imageMogr2/thumbnail/720x/quality/48',
+       async process(pathname, match) {
+      const key = `${match[1]}${match[2]}/${match[3]}.${match[4]}!o.png`;
+      const buffer = await store.get(key);
+      const im2 = new ImageMogr2(sharp(buffer));
+      const out = await im2.thumbnail('720x').q(48).process();
+      return out.toBuffer({
+        resolveWithObject: true,
+      });
+    },
   },
   {
     example_input: '/userfiles/005/014/705/photos/1428846001472/1428846001472.png!original.png!48',
@@ -609,30 +674,77 @@ const rules = [
     example_output: '/userfiles/004/538/761/4538761_26168_1428898495.png!o.png?imageMogr2/thumbnail/480x|imageInfo',
     pattern: '/(userfiles|ingfiles)((?:/\\w\\w*)*)/([\\d_]+)[.](\\w+)(?:%21|!)m[.]png[?]imageInfo$',
     repl: '/${1}${2}/${3}.${4}!o.png?imageMogr2/thumbnail/480x|imageInfo',
+    async process(pathname, match) {
+      const key = `${match[1]}${match[2]}/${match[3]}.${match[4]}!o.png`;
+      const buffer = await store.get(key);
+      const im2 = new ImageMogr2(sharp(buffer));
+      const out = await im2.thumbnail('480x').process();
+      const outFile = new ImageInfo(out)
+            return outFile.toBuffer({
+              resolveWithObject: true
+            });
+    },
   },
   {
     example_input: '/userfiles/004/538/761/4538761_26168_1428898495.png!m.png',
     example_output: '/userfiles/004/538/761/4538761_26168_1428898495.png!o.png?imageMogr2/thumbnail/480x',
     pattern: '/(userfiles|ingfiles)((?:/\\w\\w*)*)/([\\d_]+)[.](\\w+)(?:%21|!)m[.]png$',
     repl: '/${1}${2}/${3}.${4}!o.png?imageMogr2/thumbnail/480x',
+    async process(pathname, match) {
+      const key = `${match[1]}${match[2]}/${match[3]}.${match[4]}!o.png`;
+      const buffer = await store.get(key);
+      const im2 = new ImageMogr2(sharp(buffer));
+      const out = await im2.thumbnail('480x').process();
+            return out.toBuffer({
+              resolveWithObject: true
+            });
+    },
   },
   {
     example_input: '/userfiles/004/538/761/4538761_26168_1428898495.png!m.png!48',
     example_output: '/userfiles/004/538/761/4538761_26168_1428898495.png!o.png?imageMogr2/thumbnail/480x/quality/48',
     pattern: '/(userfiles|ingfiles)((?:/\\w\\w*)*)/([\\d_]+)[.](\\w+)(?:%21|!)m[.]png(?:%21|!)48$',
     repl: '/${1}${2}/${3}.${4}!o.png?imageMogr2/thumbnail/480x/quality/48',
+    async process(pathname, match) {
+      const key = `${match[1]}${match[2]}/${match[3]}.${match[4]}!o.png`;
+      const buffer = await store.get(key);
+      const im2 = new ImageMogr2(sharp(buffer));
+      const out = await im2.thumbnail('480x').q(48).process();
+            return out.toBuffer({
+              resolveWithObject: true
+            });
+    },
   },
   {
     example_input: '/userfiles/004/538/761/4538761_26168_1428898495.png!l.png?imageInfo',
     example_output: '/userfiles/004/538/761/4538761_26168_1428898495.png!o.png?imageMogr2/thumbnail/720x|imageInfo',
     pattern: '/(userfiles|ingfiles)((?:/\\w\\w*)*)/([\\d_]+)[.](\\w+)(?:%21|!)l[.]png[?]imageInfo$',
     repl: '/${1}${2}/${3}.${4}!o.png?imageMogr2/thumbnail/720x|imageInfo',
+    async process(pathname, match) {
+      const key = `${match[1]}${match[2]}/${match[3]}.${match[4]}!o.png`;
+      const buffer = await store.get(key);
+      const im2 = new ImageMogr2(sharp(buffer));
+      const out = await im2.thumbnail('720x').process();
+      const outFile = new ImageInfo(out)
+            return outFile.toBuffer({
+              resolveWithObject: true
+            });
+    },
   },
   {
     example_input: '/userfiles/004/538/761/4538761_26168_1428898495.png!l.png',
     example_output: '/userfiles/004/538/761/4538761_26168_1428898495.png!o.png?imageMogr2/thumbnail/720x',
     pattern: '/(userfiles|ingfiles)((?:/\\w\\w*)*)/([\\d_]+)[.](\\w+)(?:%21|!)l[.]png$',
     repl: '/${1}${2}/${3}.${4}!o.png?imageMogr2/thumbnail/720x',
+    async process(pathname, match) {
+      const key = `${match[1]}${match[2]}/${match[3]}.${match[4]}!o.png`;
+      const buffer = await store.get(key);
+      const im2 = new ImageMogr2(sharp(buffer));
+      const out = await im2.thumbnail('720x').process();
+            return out.toBuffer({
+              resolveWithObject: true
+            });
+    },
   },
   {
     example_input: '/userfiles/004/538/761/4538761_26168_1428898495.png!original.png',
@@ -653,6 +765,15 @@ const rules = [
     example_output: '/userfiles/004/538/761/4538761_26168_1428898495.png!o.png?imageMogr2/thumbnail/720x/quality/48',
     pattern: '/(userfiles|ingfiles)((?:/\\w\\w*)*)/([\\d_]+)[.](\\w+)(?:%21|!)l[.]png(?:%21|!)48$',
     repl: '/${1}${2}/${3}.${4}!o.png?imageMogr2/thumbnail/720x/quality/48',
+    async process(pathname, match) {
+      const key = `${match[1]}${match[2]}/${match[3]}.${match[4]}!o.png`;
+      const buffer = await store.get(key);
+      const im2 = new ImageMogr2(sharp(buffer));
+      const out = await im2.thumbnail('720x').q(48).process();
+            return out.toBuffer({
+              resolveWithObject: true
+            });
+    },
   },
   {
     example_input: '/userfiles/004/538/761/4538761_26168_1428898495.png!original.png!48',
@@ -673,18 +794,46 @@ const rules = [
     example_output: '/userfiles/004/538/761/4538761_26168_1428898495.png!o.png?imageMogr2/thumbnail/360x|imageInfo',
     pattern: '/(userfiles|ingfiles)((?:/\\w\\w*)*)/([\\d_]+)[.](\\w+)(?:(?:%21|!)s[.]png)?[?]imageInfo$',
     repl: '/${1}${2}/${3}.${4}!o.png?imageMogr2/thumbnail/360x|imageInfo',
+    async process(pathname, match) {
+      const key = `${match[1]}${match[2]}/${match[3]}.${match[4]}!o.png`;
+      const buffer = await store.get(key);
+      const im2 = new ImageMogr2(sharp(buffer));
+      const out = await im2.thumbnail('360x').process();
+      const outFile = new ImageInfo(out)
+            return outFile.toBuffer({
+              resolveWithObject: true
+            });
+    },
   },
   {
     example_input: '/userfiles/004/538/761/4538761_26168_1428898495.png!s.png',
     example_output: '/userfiles/004/538/761/4538761_26168_1428898495.png!o.png?imageMogr2/thumbnail/360x',
     pattern: '/(userfiles|ingfiles)((?:/\\w\\w*)*)/([\\d_]+)[.](\\w+)(?:(?:%21|!)s[.]png)?$',
     repl: '/${1}${2}/${3}.${4}!o.png?imageMogr2/thumbnail/360x',
+    async process(pathname, match) {
+      const key = `${match[1]}${match[2]}/${match[3]}.${match[4]}!o.png`;
+      const buffer = await store.get(key);
+      const im2 = new ImageMogr2(sharp(buffer));
+      const out = await im2.thumbnail('360x').process();
+            return out.toBuffer({
+              resolveWithObject: true
+            });
+    },
   },
   {
     example_input: '/userfiles/004/538/761/4538761_26168_1428898495.png!s.png!48',
     example_output: '/userfiles/004/538/761/4538761_26168_1428898495.png!o.png?imageMogr2/thumbnail/360x/quality/48',
     pattern: '/(userfiles|ingfiles)((?:/\\w\\w*)*)/([\\d_]+)[.](\\w+)(?:(?:%21|!)s[.]png)?(?:%21|!)48$',
     repl: '/${1}${2}/${3}.${4}!o.png?imageMogr2/thumbnail/360x/quality/48',
+    async process(pathname, match) {
+      const key = `${match[1]}${match[2]}/${match[3]}.${match[4]}!o.png`;
+      const buffer = await store.get(key);
+      const im2 = new ImageMogr2(sharp(buffer));
+      const out = await im2.thumbnail('360x').q(48).process();
+            return out.toBuffer({
+              resolveWithObject: true
+            });
+    },
   },
   {
     example_input: '/userfiles/004/538/761/4538761_26168_1428898495.png!480x720.png?imageInfo',
@@ -738,18 +887,39 @@ const rules = [
     repl: '${0}?imageMogr2/thumbnail/!33p',
     example_input: '/blued/mrright/408119/408119_1433488325.png',
     example_output: '/blued/mrright/408119/408119_1433488325.png?imageMogr2/thumbnail/!33p',
+    async process(pathname, match) {
+      const key = `${match[0]}`;
+      const buffer = await store.get(key);
+      const im2 = new ImageMogr2(sharp(buffer));
+      const out = await im2.thumbnail('!33p').process();
+      return out.toBuffer({ resolveWithObject: true });
+    },
   },
   {
     pattern: '/topics/([\\d_]+)[.](\\w+)(?:%21|!)m[.]png$',
     repl: '/topics/${1}.${2}?imageMogr2/thumbnail/480x',
     example_input: '/topics/20150615_12_1434337587.jpg!m.png',
     example_output: '/topics/20150615_12_1434337587.jpg?imageMogr2/thumbnail/480x',
+    async process(pathname, match) {
+      const key = `topics/${match[1]}.${match[2]}`;
+      const buffer = await store.get(key);
+      const im2 = new ImageMogr2(sharp(buffer));
+      const out = await im2.thumbnail('480x').process();
+      return out.toBuffer({ resolveWithObject: true });
+    },
   },
   {
     pattern: '/topics/([\\d_]+)[.](\\w+)(?:%21|!)l[.]png$',
     repl: '/topics/${1}.${2}?imageMogr2/thumbnail/720x',
     example_input: '/topics/20150615_12_1434337587.jpg!l.png',
     example_output: '/topics/20150615_12_1434337587.jpg?imageMogr2/thumbnail/720x',
+    async process(pathname, match) {
+      const key = `topics/${match[1]}.${match[2]}`;
+      const buffer = await store.get(key);
+      const im2 = new ImageMogr2(sharp(buffer));
+      const out = await im2.thumbnail('720x').process();
+      return out.toBuffer({ resolveWithObject: true });
+    },
   },
   {
     pattern: '/topics/([\\d_]+)[.](\\w+)(?:%21|!)o(?:riginal)?[.]png$',
@@ -800,12 +970,26 @@ const rules = [
     repl: '/topics/${1}.${2}?imageMogr2/thumbnail/480x/quality/48',
     example_input: '/topics/20150615_12_1434337587.jpg!m.png!48',
     example_output: '/topics/20150615_12_1434337587.jpg?imageMogr2/thumbnail/480x/quality/48',
+    async process(pathname, match) {
+      const key = `topics/${match[1]}.${match[2]}`;
+      const buffer = await store.get(key);
+      const im2 = new ImageMogr2(sharp(buffer));
+      const out = await im2.thumbnail('480x').q(48).process();
+      return out.toBuffer({ resolveWithObject: true });
+    },
   },
   {
     pattern: '/topics/([\\d_]+)[.](\\w+)(?:%21|!)l[.]png(?:%21|!)48$',
     repl: '/topics/${1}.${2}?imageMogr2/thumbnail/720x/quality/48',
     example_input: '/topics/20150615_12_1434337587.jpg!l.png!48',
     example_output: '/topics/20150615_12_1434337587.jpg?imageMogr2/thumbnail/720x/quality/48',
+    async process(pathname, match) {
+      const key = `topics/${match[1]}.${match[2]}`;
+      const buffer = await store.get(key);
+      const im2 = new ImageMogr2(sharp(buffer));
+      const out = await im2.thumbnail('720x').q(48).process();
+      return out.toBuffer({ resolveWithObject: true });
+    },
   },
   {
     pattern: '/topics/([\\d_]+)[.](\\w+)(?:%21|!)o(?:riginal)?[.]png(?:%21|!)48$',
@@ -906,30 +1090,77 @@ const rules = [
     repl: '/advertise${1}/${2}.${3}?imageMogr2/thumbnail/480x|imageInfo',
     example_input: '/advertise/pics/f99687dd719c4e8bc6a39e946c3d9ef7-1463645316-10851.png!m.png?imageInfo',
     example_output: '/advertise/pics/f99687dd719c4e8bc6a39e946c3d9ef7-1463645316-10851.png?imageMogr2/thumbnail/480x|imageInfo',
+    async process(pathname, match) {
+      const key = `advertise${match[1]}/${match[2]}.${match[3]}`;
+      const buffer = await store.get(key);
+      const im2 = new ImageMogr2(sharp(buffer));
+      const out = await im2.thumbnail('480x').process();
+      const outFile = new ImageInfo(out)
+            return outFile.toBuffer({
+              resolveWithObject: true
+            });
+    },
   },
   {
     pattern: '/advertise((?:/\\w\\w*)*)/([[\\w-]+)[.](\\w+)(?:%21|!)m[.]png$',
     repl: '/advertise${1}/${2}.${3}?imageMogr2/thumbnail/480x',
     example_input: '/advertise/pics/f99687dd719c4e8bc6a39e946c3d9ef7-1463645316-10851.png!m.png',
     example_output: '/advertise/pics/f99687dd719c4e8bc6a39e946c3d9ef7-1463645316-10851.png?imageMogr2/thumbnail/480x',
+    async process(pathname, match) {
+      const key = `advertise${match[1]}/${match[2]}.${match[3]}`;
+      const buffer = await store.get(key);
+      const im2 = new ImageMogr2(sharp(buffer));
+      const out = await im2.thumbnail('480x').process();
+            return out.toBuffer({
+              resolveWithObject: true
+            });
+    },
   },
   {
     pattern: '/advertise((?:/\\w\\w*)*)/([[\\w-]+)[.](\\w+)(?:%21|!)m[.]png(?:%21|!)48$',
     repl: '/advertise${1}/${2}.${3}?imageMogr2/thumbnail/480x/quality/48',
     example_input: '/advertise/pics/f99687dd719c4e8bc6a39e946c3d9ef7-1463645316-10851.png!m.png!48',
     example_output: '/advertise/pics/f99687dd719c4e8bc6a39e946c3d9ef7-1463645316-10851.png?imageMogr2/thumbnail/480x/quality/48',
+    async process(pathname, match) {
+      const key = `advertise${match[1]}/${match[2]}.${match[3]}`;
+      const buffer = await store.get(key);
+      const im2 = new ImageMogr2(sharp(buffer));
+      const out = await im2.thumbnail('480x').q(48).process();
+            return out.toBuffer({
+              resolveWithObject: true
+            });
+    },
   },
   {
     pattern: '/advertise((?:/\\w\\w*)*)/([\\w-]+)[.](\\w+)(?:%21|!)l[.]png[?]imageInfo$',
     repl: '/advertise${1}/${2}.${3}?imageMogr2/thumbnail/720x|imageInfo',
     example_input: '/advertise/pics/f99687dd719c4e8bc6a39e946c3d9ef7-1463645316-10851.png!l.png?imageInfo',
     example_output: '/advertise/pics/f99687dd719c4e8bc6a39e946c3d9ef7-1463645316-10851.png?imageMogr2/thumbnail/720x|imageInfo',
+    async process(pathname, match) {
+      const key = `advertise${match[1]}/${match[2]}.${match[3]}`;
+      const buffer = await store.get(key);
+      const im2 = new ImageMogr2(sharp(buffer));
+      const out = await im2.thumbnail('720x').process();
+      const outFile = new ImageInfo(out)
+            return outFile.toBuffer({
+              resolveWithObject: true
+            });
+    },
   },
   {
     pattern: '/advertise((?:/\\w\\w*)*)/([\\w-]+)[.](\\w+)(?:%21|!)l[.]png$',
     repl: '/advertise${1}/${2}.${3}?imageMogr2/thumbnail/720x',
     example_input: '/advertise/pics/f99687dd719c4e8bc6a39e946c3d9ef7-1463645316-10851.png!l.png',
     example_output: '/advertise/pics/f99687dd719c4e8bc6a39e946c3d9ef7-1463645316-10851.png?imageMogr2/thumbnail/720x',
+    async process(pathname, match) {
+      const key = `advertise${match[1]}/${match[2]}.${match[3]}`;
+      const buffer = await store.get(key);
+      const im2 = new ImageMogr2(sharp(buffer));
+      const out = await im2.thumbnail('720x').q(48).process();
+            return out.toBuffer({
+              resolveWithObject: true
+            });
+    },
   },
   {
     pattern: '/advertise((?:/\\w\\w*)*)/([\\w-]+)[.](\\w+)(?:%21|!)o(?:riginal)?[.]png$',
@@ -950,6 +1181,16 @@ const rules = [
     repl: '/advertise${1}/${2}.${3}?imageMogr2/thumbnail/720x/quality/48',
     example_input: '/advertise/pics/f99687dd719c4e8bc6a39e946c3d9ef7-1463645316-10851.png!l.png!48',
     example_output: '/advertise/pics/f99687dd719c4e8bc6a39e946c3d9ef7-1463645316-10851.png?imageMogr2/thumbnail/720x/quality/48',
+    async process(pathname, match) {
+      const key = `advertise${match[1]}/${match[2]}.${match[3]}`;
+      const buffer = await store.get(key);
+      const im2 = new ImageMogr2(sharp(buffer));
+      const out = await im2.thumbnail('720x').q(48).process();
+      const outFile = new ImageInfo(out)
+            return outFile.toBuffer({
+              resolveWithObject: true
+            });
+    },
   },
   {
     pattern: '/advertise((?:/\\w\\w*)*)/([\\w-]+)[.](\\w+)(?:%21|!)o(?:riginal)?[.]png(?:%21|!)48$',
@@ -970,18 +1211,46 @@ const rules = [
     repl: '/advertise${1}/${2}.${3}?imageMogr2/thumbnail/360x|imageInfo',
     example_input: '/advertise/pics/f99687dd719c4e8bc6a39e946c3d9ef7-1463645316-10851.png!s.png?imageInfo',
     example_output: '/advertise/pics/f99687dd719c4e8bc6a39e946c3d9ef7-1463645316-10851.png?imageMogr2/thumbnail/360x|imageInfo',
+    async process(pathname, match) {
+      const key = `advertise${match[1]}/${match[2]}.${match[3]}`;
+      const buffer = await store.get(key);
+      const im2 = new ImageMogr2(sharp(buffer));
+      const out = await im2.thumbnail('360x').process();
+      const outFile = new ImageInfo(out)
+            return outFile.toBuffer({
+              resolveWithObject: true
+            });
+    },
   },
   {
     pattern: '/advertise((?:/\\w\\w*)*)/([\\w-]+)[.](\\w+)(?:(?:%21|!)s[.]png)?$',
     repl: '/advertise${1}/${2}.${3}?imageMogr2/thumbnail/360x',
     example_input: '/advertise/pics/f99687dd719c4e8bc6a39e946c3d9ef7-1463645316-10851.png!s.png',
     example_output: '/advertise/pics/f99687dd719c4e8bc6a39e946c3d9ef7-1463645316-10851.png?imageMogr2/thumbnail/360x',
+    async process(pathname, match) {
+      const key = `advertise${match[1]}/${match[2]}.${match[3]}`;
+      const buffer = await store.get(key);
+      const im2 = new ImageMogr2(sharp(buffer));
+      const out = await im2.thumbnail('360x').process();
+            return out.toBuffer({
+              resolveWithObject: true
+            });
+    },
   },
   {
     pattern: '/advertise((?:/\\w\\w*)*)/([\\w-]+)[.](\\w+)(?:(?:%21|!)s[.]png)?(?:%21|!)48$',
     repl: '/advertise${1}/${2}.${3}?imageMogr2/thumbnail/360x/quality/48',
     example_input: '/advertise/pics/f99687dd719c4e8bc6a39e946c3d9ef7-1463645316-10851.png!s.png!48',
     example_output: '/advertise/pics/f99687dd719c4e8bc6a39e946c3d9ef7-1463645316-10851.png?imageMogr2/thumbnail/360x/quality/48',
+    async process(pathname, match) {
+      const key = `advertise${match[1]}/${match[2]}.${match[3]}`;
+      const buffer = await store.get(key);
+      const im2 = new ImageMogr2(sharp(buffer));
+      const out = await im2.thumbnail('360x').q(48).process();
+            return out.toBuffer({
+              resolveWithObject: true
+            });
+    },
   },
   {
     pattern: '/advertise((?:/\\w\\w*)*)/([\\w-]+)[.](\\w+)(?:%21|!)([1-9]\\d*)x([1-9]\\d*)[.]png[?]imageInfo$',
@@ -1081,8 +1350,7 @@ const rules = [
       const key = `userfiles${match[1]}!Background.jpg!o.png`;
       const buffer = await store.get(key);
       const iv2 = new ImageView2(sharp(buffer));
-      const out = await iv2.m(2).w(match[2]).h(match[3]).q(48)
-        .process();
+      const out = await iv2.m(2).w(match[2]).h(match[3]).q(48).process();
       return out.toBuffer({ resolveWithObject: true });
     },
   },
@@ -1109,8 +1377,7 @@ const rules = [
       const key = `userfiles${match[1]}!Background.jpg!o.png`;
       const buffer = await store.get(key);
       const iv2 = new ImageView2(sharp(buffer));
-      const out = await iv2.m(2).w(480).h(820).q(48)
-        .process();
+      const out = await iv2.m(2).w(480).h(820).q(48).process();
       return out.toBuffer({
         resolveWithObject: true,
       });
