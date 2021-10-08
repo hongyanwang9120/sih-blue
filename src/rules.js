@@ -2,6 +2,7 @@ const sharp = require('sharp');
 const createError = require('http-errors');
 const { S3Store } = require('./store');
 const { ImageView2 } = require('./image-view2');
+const { ImageMogr2 } = require('./image-mogr2');
 const { ImageInfo } = require('./image-info');
 const bucket = (process.env.SOURCE_BUCKETS || '').split(',')[0];
 const store = new S3Store(bucket);
@@ -12,12 +13,26 @@ const rules = [
         repl: '/private_message${1}/${2}.${3}!o.png?imageMogr2/thumbnail/!30p',
         example_input: '/private_message/photos/1559109545_11790.png',
         example_output: '/private_message/photos/1559109545_11790.png!o.png?imageMogr2/thumbnail/!30p',
+        async process(pathname, match) {
+            const key = `private_message${match[1]}/${match[2]}.${match[3]}!o.png`;
+            const buffer = await store.get(key);
+            const im2 = new ImageMogr2(sharp(buffer));
+            const out = await im2.thumbnail('!30p').process();
+            return out.toBuffer({ resolveWithObject: true });
+        },
     },
     {
         pattern: '/blued/mrright.+$',
         repl: '${0}?imageMogr2/thumbnail/!33p',
         example_input: '/blued/mrright/408119/408119_1433488325.png',
         example_output: '/blued/mrright/408119/408119_1433488325.png?imageMogr2/thumbnail/!33p',
+        async process(pathname, match) {
+            const key = `${match[0]}`;
+            const buffer = await store.get(key);
+            const im2 = new ImageMogr2(sharp(buffer));
+            const out = await im2.thumbnail('!33p').process();
+            return out.toBuffer({ resolveWithObject: true });
+        },
     },
     {
         pattern: '/userfiles((?:/\\w\\w*)*)(?:%21|!)Background[.]jpg$',
@@ -53,8 +68,8 @@ const rules = [
         async process(pathname, match) {
             const key = `avatars${match[1]}/${match[2]}.${match[3]}`;
             const buffer = await store.get(key);
-            const iv2 = new ImageMogr2(sharp(buffer));
-            const out = await iv2.b(true).w(480).process();
+            const im2 = new ImageMogr2(sharp(buffer));
+            const out = await im2.thumbnail('480x').process();;
             return out.toBuffer({
               resolveWithObject: true
             });
@@ -65,12 +80,27 @@ const rules = [
         repl: '/avatars${1}/${2}.${3}?imageMogr2/thumbnail/720x',
         example_input: '/avatars/c8573157bcfea2ed163bdf2c52e6e238-1464334585-25850.png!l.png',
         example_output: '/avatars/c8573157bcfea2ed163bdf2c52e6e238-1464334585-25850.png?imageMogr2/thumbnail/720x',
+        async process(pathname, match) {
+            const key = `avatars${match[1]}/${match[2]}.${match[3]}`;
+            const buffer = await store.get(key);
+            const im2 = new ImageMogr2(sharp(buffer));
+            const out = await im2.thumbnail('720x').process();
+            return out.toBuffer({ resolveWithObject: true });
+        },
     },
     {
         pattern: '/avatars((?:/\\w\\w*)*)/([[\\w-]+)[.](\\w+)(?:%21|!)o(?:riginal)?[.]png$',
         repl: '/avatars${1}/${2}.${3}',
         example_input: '/avatars/c8573157bcfea2ed163bdf2c52e6e238-1464334585-25850.png!o.png',
         example_output: '/avatars/c8573157bcfea2ed163bdf2c52e6e238-1464334585-25850.png',
+        async process(pathname, match) {
+            const key = `avatars${match[1]}/${match[2]}.${match[3]}`;
+            const buffer = await store.get(key);
+            const iv2 = new ImageView2(sharp(buffer));
+            return iv2.toBuffer({
+              resolveWithObject: true
+            });
+          },
     },
     {
         pattern: '/avatars((?:/\\w\\w*)*)/([[\\w-]+)[.](\\w+)(?:(?:%21|!)s[.]png)?$',
@@ -119,6 +149,14 @@ const rules = [
         repl: '/avatars${1}/${2}.${3}',
         example_input: '/avatars/c8573157bcfea2ed163bdf2c52e6e238-1464334585-25850.png!o.png!48',
         example_output: '/avatars/c8573157bcfea2ed163bdf2c52e6e238-1464334585-25850.png',
+        async process(pathname, match) {
+            const key = `avatars${match[1]}/${match[2]}.${match[3]}`;
+            const buffer = await store.get(key);
+            const iv2 = new ImageView2(sharp(buffer));
+            return iv2.toBuffer({
+              resolveWithObject: true
+            });
+          },
     },
     {
         pattern: '/avatars((?:/\\w\\w*)*)/([[\\w-]+)[.](\\w+)(?:(?:%21|!)s[.]png)?(?:%21|!)48$',
@@ -185,6 +223,14 @@ const rules = [
         example_output: '/userfiles/000/000/002/17!Head.png!o.png',
         pattern: '/userfiles((?:/\\w\\w*)*)(?:%21|!)Head[.](\\w+)(?:%21|!)o(?:riginal)?[.]png$',
         repl: '/userfiles${1}!Head.${2}!o.png',
+        async process(pathname, match) {
+            const key = `userfiles${match[1]}!Head.${match[2]}!o.png`;
+            const buffer = await store.get(key);
+            const iv2 = new ImageView2(sharp(buffer));
+            return iv2.toBuffer({
+              resolveWithObject: true
+            });
+          },
     },
     {
         example_input: '/userfiles/000/000/002/17!Head.png!l.png!48',
@@ -197,6 +243,14 @@ const rules = [
         example_output: '/userfiles/000/000/002/17!Head.png!o.png',
         pattern: '/userfiles((?:/\\w\\w*)*)(?:%21|!)Head[.](\\w+)(?:%21|!)o(?:riginal)?[.]png(?:%21|!)48$',
         repl: '/userfiles${1}!Head.${2}!o.png',
+        async process(pathname, match) {
+            const key = `userfiles${match[1]}!Head.${match[2]}!o.png`;
+            const buffer = await store.get(key);
+            const iv2 = new ImageView2(sharp(buffer));
+            return iv2.toBuffer({
+              resolveWithObject: true
+            });
+          },
     },
     {
         example_input: '/userfiles/000/000/002/17!Head.png!s.png?imageInfo',
@@ -349,6 +403,14 @@ const rules = [
         example_output: '/userfiles/005/014/705/photos/1428846001472/1428846001472.png!o.png',
         pattern: '/(userfiles|groupfiles)((?:/\\w\\w*)*)/(\\d+)[.](\\w+)(?:%21|!)o(?:riginal)?[.]png$',
         repl: '/${1}${2}/${3}.${4}!o.png',
+        async process(pathname, match) {
+            const key = `${match[1]}${match[2]}/${match[3]}.${match[4]}!o.png`;
+            const buffer = await store.get(key);
+            const iv2 = new ImageView2(sharp(buffer));
+            return iv2.toBuffer({
+              resolveWithObject: true
+            });
+          },
     },
     {
         example_input: '/userfiles/005/014/705/photos/1428846001472/1428846001472.png!l.png!48',
@@ -361,6 +423,14 @@ const rules = [
         example_output: '/userfiles/005/014/705/photos/1428846001472/1428846001472.png!o.png',
         pattern: '/(userfiles|groupfiles)((?:/\\w\\w*)*)/(\\d+)[.](\\w+)(?:%21|!)o(?:riginal)?[.]png(?:%21|!)48$',
         repl: '/${1}${2}/${3}.${4}!o.png',
+        async process(pathname, match) {
+            const key = `${match[1]}${match[2]}/${match[3]}.${match[4]}!o.png`;
+            const buffer = await store.get(key);
+            const iv2 = new ImageView2(sharp(buffer));
+            return iv2.toBuffer({
+              resolveWithObject: true
+            });
+          },
     },
     {
         example_input: '/userfiles/005/014/705/photos/1428846001472/1428846001472.png!s.png?imageInfo',
@@ -489,6 +559,14 @@ const rules = [
         example_output: '/userfiles/004/538/761/4538761_26168_1428898495.png!o.png',
         pattern: '/(userfiles|ingfiles)((?:/\\w\\w*)*)/([\\d_]+)[.](\\w+)(?:%21|!)o(?:riginal)?[.]png$',
         repl: '/${1}${2}/${3}.${4}!o.png',
+        async process(pathname, match) {
+            const key = `${match[1]}${match[2]}/${match[3]}.${match[4]}!o.png`;
+            const buffer = await store.get(key);
+            const iv2 = new ImageView2(sharp(buffer));
+            return iv2.toBuffer({
+              resolveWithObject: true
+            });
+          },
     },
     {
         example_input: '/userfiles/004/538/761/4538761_26168_1428898495.png!l.png!48',
@@ -501,6 +579,14 @@ const rules = [
         example_output: '/userfiles/004/538/761/4538761_26168_1428898495.png!o.png',
         pattern: '/(userfiles|ingfiles)((?:/\\w\\w*)*)/([\\d_]+)[.](\\w+)(?:%21|!)o(?:riginal)?[.]png(?:%21|!)48$',
         repl: '/${1}${2}/${3}.${4}!o.png',
+        async process(pathname, match) {
+            const key = `${match[1]}${match[2]}/${match[3]}.${match[4]}!o.png`;
+            const buffer = await store.get(key);
+            const iv2 = new ImageView2(sharp(buffer));
+            return iv2.toBuffer({
+              resolveWithObject: true
+            });
+          },
     },
     {
         example_input: '/userfiles/004/538/761/4538761_26168_1428898495.png!s.png?imageInfo',
@@ -589,18 +675,44 @@ const rules = [
         repl: '/topics/${1}.${2}',
         example_input: '/topics/20150615_12_1434337587.jpg!o.png',
         example_output: '/topics/20150615_12_1434337587.jpg',
+        async process(pathname, match) {
+            const key = `topics/${match[1]}.${match[2]}`;
+            const buffer = await store.get(key);
+            const iv2 = new ImageView2(sharp(buffer));
+            return iv2.toBuffer({
+              resolveWithObject: true
+            });
+          },
     },
     {
         pattern: '/topics/([\\d_]+)[.](\\w+)(?:(?:%21|!)s[.]png)?$',
         repl: '/topics/${1}.${2}?imageView2/1/w/192/h/192',
         example_input: '/topics/20150615_12_1434337587.jpg!s.png',
         example_output: '/topics/20150615_12_1434337587.jpg?imageView2/1/w/192/h/192',
+        async process(pathname, match) {
+            const key = `topics/${match[1]}.${match[2]}`;
+            const buffer = await store.get(key);
+            const iv2 = new ImageView2(sharp(buffer));
+            const out = await iv2.m(1).w(192).h(192).process();
+            return out.toBuffer({
+              resolveWithObject: true
+            });
+          },
     },
     {
         pattern: '/topics/([\\d_]+)[.](\\w+)(?:%21|!)([1-9]\\d*)x([1-9]\\d*)[.]png$',
         repl: '/topics/${1}.${2}?imageView2/1/w/${3}/h/${4}',
         example_input: '/topics/20150615_12_1434337587.jpg!200x200.png',
         example_output: '/topics/20150615_12_1434337587.jpg?imageView2/1/w/200/h/200',
+        async process(pathname, match) {
+            const key = `topics/${match[1]}.${match[2]}`;
+            const buffer = await store.get(key);
+            const iv2 = new ImageView2(sharp(buffer));
+            const out = await iv2.m(1).w(parseInt(match[3])).h(parseInt(match[4])).process();
+            return out.toBuffer({
+              resolveWithObject: true
+            });
+          },
     },
     {
         pattern: '/topics/([\\d_]+)[.](\\w+)(?:%21|!)m[.]png(?:%21|!)48$',
@@ -619,12 +731,29 @@ const rules = [
         repl: '/topics/${1}.${2}',
         example_input: '/topics/20150615_12_1434337587.jpg!o.png!48',
         example_output: '/topics/20150615_12_1434337587.jpg',
+        async process(pathname, match) {
+            const key = `topics/${match[1]}.${match[2]}`;
+            const buffer = await store.get(key);
+            const iv2 = new ImageView2(sharp(buffer));
+            return iv2.toBuffer({
+              resolveWithObject: true
+            });
+          },
     },
     {
         pattern: '/topics/([\\d_]+)[.](\\w+)(?:(?:%21|!)s[.]png)?(?:%21|!)48$',
         repl: '/topics/${1}.${2}?imageView2/1/w/192/h/192/q/48',
         example_input: '/topics/20150615_12_1434337587.jpg!s.png!48',
         example_output: '/topics/20150615_12_1434337587.jpg?imageView2/1/w/192/h/192/q/48',
+        async process(pathname, match) {
+            const key = `topics/${match[1]}.${match[2]}`;
+            const buffer = await store.get(key);
+            const iv2 = new ImageView2(sharp(buffer));
+            const out = await iv2.m(1).w(192).h(192).q(48).process();
+            return out.toBuffer({
+              resolveWithObject: true
+            });
+          },
     },
     {
         pattern: '/topics/([\\d_]+)[.](\\w+)(?:%21|!)([1-9]\\d*)x([1-9]\\d*)[.]png(?:%21|!)48$',
@@ -724,6 +853,14 @@ const rules = [
         repl: '/advertise${1}/${2}.${3}',
         example_input: '/advertise/pics/f99687dd719c4e8bc6a39e946c3d9ef7-1463645316-10851.png!o.png',
         example_output: '/advertise/pics/f99687dd719c4e8bc6a39e946c3d9ef7-1463645316-10851.png',
+        async process(pathname, match) {
+            const key = `advertise${match[1]}/${match[2]}.${match[3]}`;
+            const buffer = await store.get(key);
+            const iv2 = new ImageView2(sharp(buffer));
+            return iv2.toBuffer({
+              resolveWithObject: true
+            });
+          },
     },
     {
         pattern: '/advertise((?:/\\w\\w*)*)/([\\w-]+)[.](\\w+)(?:%21|!)l[.]png(?:%21|!)48$',
@@ -736,6 +873,14 @@ const rules = [
         repl: '/advertise${1}/${2}.${3}',
         example_input: '/advertise/pics/f99687dd719c4e8bc6a39e946c3d9ef7-1463645316-10851.png!o.png!48',
         example_output: '/advertise/pics/f99687dd719c4e8bc6a39e946c3d9ef7-1463645316-10851.png',
+        async process(pathname, match) {
+            const key = `advertise${match[1]}/${match[2]}.${match[3]}`;
+            const buffer = await store.get(key);
+            const iv2 = new ImageView2(sharp(buffer));
+            return iv2.toBuffer({
+              resolveWithObject: true
+            });
+          },
     },
     {
         pattern: '/advertise((?:/\\w\\w*)*)/([\\w-]+)[.](\\w+)(?:(?:%21|!)s[.]png)?[?]imageInfo$',
