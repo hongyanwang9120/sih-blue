@@ -551,7 +551,7 @@ const rules = [
     example_output: '/userfiles/005/014/705/photos/1428846001472/1428846001472.png!o.png?imageMogr2/thumbnail/720x/quality/48',
     pattern: '/(userfiles|groupfiles)((?:/\\w\\w*)*)/(\\d+)[.](\\w+)(?:%21|!)l[.]png(?:%21|!)48$',
     repl: '/${1}${2}/${3}.${4}!o.png?imageMogr2/thumbnail/720x/quality/48',
-       async process(pathname, match) {
+    async process(pathname, match) {
       const key = `${match[1]}${match[2]}/${match[3]}.${match[4]}!o.png`;
       const buffer = await store.get(key);
       const im2 = new ImageMogr2(sharp(buffer));
@@ -679,10 +679,10 @@ const rules = [
       const buffer = await store.get(key);
       const im2 = new ImageMogr2(sharp(buffer));
       const out = await im2.thumbnail('480x').process();
-      const outFile = new ImageInfo(out)
-            return outFile.toBuffer({
-              resolveWithObject: true
-            });
+      const outFile = new ImageInfo(out);
+      return outFile.toBuffer({
+        resolveWithObject: true,
+      });
     },
   },
   {
@@ -695,9 +695,9 @@ const rules = [
       const buffer = await store.get(key);
       const im2 = new ImageMogr2(sharp(buffer));
       const out = await im2.thumbnail('480x').process();
-            return out.toBuffer({
-              resolveWithObject: true
-            });
+      return out.toBuffer({
+        resolveWithObject: true,
+      });
     },
   },
   {
@@ -710,9 +710,9 @@ const rules = [
       const buffer = await store.get(key);
       const im2 = new ImageMogr2(sharp(buffer));
       const out = await im2.thumbnail('480x').q(48).process();
-            return out.toBuffer({
-              resolveWithObject: true
-            });
+      return out.toBuffer({
+        resolveWithObject: true,
+      });
     },
   },
   {
@@ -725,10 +725,10 @@ const rules = [
       const buffer = await store.get(key);
       const im2 = new ImageMogr2(sharp(buffer));
       const out = await im2.thumbnail('720x').process();
-      const outFile = new ImageInfo(out)
-            return outFile.toBuffer({
-              resolveWithObject: true
-            });
+      const outFile = new ImageInfo(out);
+      return outFile.toBuffer({
+        resolveWithObject: true,
+      });
     },
   },
   {
@@ -741,9 +741,9 @@ const rules = [
       const buffer = await store.get(key);
       const im2 = new ImageMogr2(sharp(buffer));
       const out = await im2.thumbnail('720x').process();
-            return out.toBuffer({
-              resolveWithObject: true
-            });
+      return out.toBuffer({
+        resolveWithObject: true,
+      });
     },
   },
   {
@@ -770,9 +770,9 @@ const rules = [
       const buffer = await store.get(key);
       const im2 = new ImageMogr2(sharp(buffer));
       const out = await im2.thumbnail('720x').q(48).process();
-            return out.toBuffer({
-              resolveWithObject: true
-            });
+      return out.toBuffer({
+        resolveWithObject: true,
+      });
     },
   },
   {
@@ -799,10 +799,10 @@ const rules = [
       const buffer = await store.get(key);
       const im2 = new ImageMogr2(sharp(buffer));
       const out = await im2.thumbnail('360x').process();
-      const outFile = new ImageInfo(out)
-            return outFile.toBuffer({
-              resolveWithObject: true
-            });
+      const outFile = new ImageInfo(out);
+      return outFile.toBuffer({
+        resolveWithObject: true,
+      });
     },
   },
   {
@@ -815,9 +815,9 @@ const rules = [
       const buffer = await store.get(key);
       const im2 = new ImageMogr2(sharp(buffer));
       const out = await im2.thumbnail('360x').process();
-            return out.toBuffer({
-              resolveWithObject: true
-            });
+      return out.toBuffer({
+        resolveWithObject: true,
+      });
     },
   },
   {
@@ -830,9 +830,9 @@ const rules = [
       const buffer = await store.get(key);
       const im2 = new ImageMogr2(sharp(buffer));
       const out = await im2.thumbnail('360x').q(48).process();
-            return out.toBuffer({
-              resolveWithObject: true
-            });
+      return out.toBuffer({
+        resolveWithObject: true,
+      });
     },
   },
   {
@@ -1103,10 +1103,10 @@ const rules = [
       const buffer = await store.get(key);
       const im2 = new ImageMogr2(sharp(buffer));
       const out = await im2.thumbnail('480x').process();
-      const outFile = new ImageInfo(out)
-            return outFile.toBuffer({
-              resolveWithObject: true
-            });
+      const outFile = new ImageInfo(out);
+      return outFile.toBuffer({
+        resolveWithObject: true,
+      });
     },
   },
   {
@@ -1119,9 +1119,9 @@ const rules = [
       const buffer = await store.get(key);
       const im2 = new ImageMogr2(sharp(buffer));
       const out = await im2.thumbnail('480x').process();
-            return out.toBuffer({
-              resolveWithObject: true
-            });
+      return out.toBuffer({
+        resolveWithObject: true,
+      });
     },
   },
   {
@@ -1134,9 +1134,9 @@ const rules = [
       const buffer = await store.get(key);
       const im2 = new ImageMogr2(sharp(buffer));
       const out = await im2.thumbnail('480x').q(48).process();
-            return out.toBuffer({
-              resolveWithObject: true
-            });
+      return out.toBuffer({
+        resolveWithObject: true,
+      });
     },
   },
   {
@@ -1149,10 +1149,10 @@ const rules = [
       const buffer = await store.get(key);
       const im2 = new ImageMogr2(sharp(buffer));
       const out = await im2.thumbnail('720x').process();
-      const outFile = new ImageInfo(out)
-            return outFile.toBuffer({
-              resolveWithObject: true
-            });
+      const outFile = new ImageInfo(out);
+      return outFile.toBuffer({
+        resolveWithObject: true,
+      });
     },
   },
   {
@@ -1165,9 +1165,9 @@ const rules = [
       const buffer = await store.get(key);
       const im2 = new ImageMogr2(sharp(buffer));
       const out = await im2.thumbnail('720x').q(48).process();
-            return out.toBuffer({
-              resolveWithObject: true
-            });
+      return out.toBuffer({
+        resolveWithObject: true,
+      });
     },
   },
   {
@@ -1194,10 +1194,10 @@ const rules = [
       const buffer = await store.get(key);
       const im2 = new ImageMogr2(sharp(buffer));
       const out = await im2.thumbnail('720x').q(48).process();
-      const outFile = new ImageInfo(out)
-            return outFile.toBuffer({
-              resolveWithObject: true
-            });
+      const outFile = new ImageInfo(out);
+      return outFile.toBuffer({
+        resolveWithObject: true,
+      });
     },
   },
   {
@@ -1224,10 +1224,10 @@ const rules = [
       const buffer = await store.get(key);
       const im2 = new ImageMogr2(sharp(buffer));
       const out = await im2.thumbnail('360x').process();
-      const outFile = new ImageInfo(out)
-            return outFile.toBuffer({
-              resolveWithObject: true
-            });
+      const outFile = new ImageInfo(out);
+      return outFile.toBuffer({
+        resolveWithObject: true,
+      });
     },
   },
   {
@@ -1240,9 +1240,9 @@ const rules = [
       const buffer = await store.get(key);
       const im2 = new ImageMogr2(sharp(buffer));
       const out = await im2.thumbnail('360x').process();
-            return out.toBuffer({
-              resolveWithObject: true
-            });
+      return out.toBuffer({
+        resolveWithObject: true,
+      });
     },
   },
   {
@@ -1255,9 +1255,9 @@ const rules = [
       const buffer = await store.get(key);
       const im2 = new ImageMogr2(sharp(buffer));
       const out = await im2.thumbnail('360x').q(48).process();
-            return out.toBuffer({
-              resolveWithObject: true
-            });
+      return out.toBuffer({
+        resolveWithObject: true,
+      });
     },
   },
   {
@@ -1358,7 +1358,8 @@ const rules = [
       const key = `userfiles${match[1]}!Background.jpg!o.png`;
       const buffer = await store.get(key);
       const iv2 = new ImageView2(sharp(buffer));
-      const out = await iv2.m(2).w(match[2]).h(match[3]).q(48).process();
+      const out = await iv2.m(2).w(match[2]).h(match[3]).q(48)
+        .process();
       return out.toBuffer({ resolveWithObject: true });
     },
   },
@@ -1385,7 +1386,8 @@ const rules = [
       const key = `userfiles${match[1]}!Background.jpg!o.png`;
       const buffer = await store.get(key);
       const iv2 = new ImageView2(sharp(buffer));
-      const out = await iv2.m(2).w(480).h(820).q(48).process();
+      const out = await iv2.m(2).w(480).h(820).q(48)
+        .process();
       return out.toBuffer({
         resolveWithObject: true,
       });
@@ -1414,3 +1416,10 @@ exports.find = function (pathname) {
           data: JSON.stringify(o),
           info: { format: 'application/json' },
         };
+      };
+      fn.rule = rule;
+      return fn;
+    }
+  }
+  return null;
+};
