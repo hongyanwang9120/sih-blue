@@ -1,6 +1,6 @@
 const sharp = require('sharp');
 const createError = require('http-errors');
-coconst { createStore } = require('./store');
+const { createStore } = require('./store');
 const { ImageView2 } = require('./image-view2');
 const { ImageMogr2 } = require('./image-mogr2');
 const { ImageInfo } = require('./image-info');
