@@ -38,6 +38,7 @@ class ImageView2 {
    * @returns this
    */
   w(v) {
+    if(!isNaN(v)) throw createError(400, 'Invalid input');
     this._w = v;
     return this;
   }
@@ -48,6 +49,7 @@ class ImageView2 {
    * @returns this
    */
   h(v) {
+    if(!isNaN(v)) throw createError(400, 'Invalid input');
     this._h = v;
     return this;
   }
@@ -58,6 +60,7 @@ class ImageView2 {
    * @returns this
    */
   q(v) {
+    if(!isNaN(v)) throw createError(400, 'Invalid input');
     this._q = v;
     return this;
   }

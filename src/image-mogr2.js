@@ -4,7 +4,7 @@ const createError = require('http-errors');
 const JPG = 'jpg';
 const JPEG = sharp.format.jpeg.id;
 
-class imageMogr2 {
+class ImageMogr2 {
   constructor(image) {
     if (!image) {
       throw createError(500, 'Empty image');
@@ -76,4 +76,4 @@ class imageMogr2 {
   }
 }
 
-exports.imageMogr2 = imageMogr2;
+exports.ImageMogr2 = ImageMogr2;
