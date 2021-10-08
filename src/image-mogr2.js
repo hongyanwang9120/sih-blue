@@ -18,18 +18,17 @@ class ImageMogr2 {
     this._thumbnail = async () => {};
     this._crop = async () => {};
   }
-  
 
-   /**
+  /**
    * Quality
    * @param {*} v
    * @returns this
    */
-    q(v) {
-      if(Number.isNaN(v)) throw createError(400, 'Invalid input');
-      this._q = v;
-      return this;
-    }
+  q(v) {
+    if (Number.isNaN(v)) throw createError(400, 'Invalid input');
+    this._q = v;
+    return this;
+  }
 
   /**
    * Blur
@@ -169,7 +168,7 @@ class ImageMogr2 {
   async process() {
     const image = this._image;
     const metadata = await image.metadata();
-    
+
     if (this._q && (JPEG === metadata.format || JPG === metadata.format)) {
       image.jpeg({ quality: this._q });
     }
@@ -188,4 +187,3 @@ class ImageMogr2 {
 }
 
 exports.ImageMogr2 = ImageMogr2;
-

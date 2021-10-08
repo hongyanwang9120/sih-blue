@@ -4,7 +4,6 @@ exports.handler = async function (event) {
   console.log('request:', JSON.stringify(event, undefined, 2));
 
   try {
-
     const processFunc = rules.find(event.path || event.rawPath);
     if (processFunc) {
       const { data, info } = await processFunc();
