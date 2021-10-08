@@ -224,7 +224,7 @@ const rules = [
         async process(pathname, match) {
           const key = `userfiles${match[1]}!Head.${match[2]}!o.png`;
           const buffer = await store.get(key);
-          const iv2 = new ImageMogr2(sharp(buffer));
+          const im2 = new ImageMogr2(sharp(buffer));
           const out = await im2.thumbnail('480x').process();
           return out.toBuffer({
             resolveWithObject: true
@@ -422,6 +422,16 @@ const rules = [
         example_output: '/userfiles/022/900/481/78855!Head.jpg!o.png?imageMogr2/blur/50x50/thumbnail/192x192|imageInfo',
         pattern: '/userfiles((?:/\\w\\w*)*)(?:%21|!)Head[.](\\w+)(?:%21|!)mogr[.]png[?]imageInfo$',
         repl: '/userfiles${1}!Head.${2}!o.png?imageMogr2/blur/50x50/thumbnail/192x192|imageInfo',
+        async process(pathname, match) {
+          const key = `userfiles${match[1]}!Head.${match[2]}!o.png`;
+          const buffer = await store.get(key);
+          const im2 = new ImageMogr2(sharp(buffer));
+          const out = await im2.b(true).thumbnail('192x192').process();
+          const outFile = new ImageInfo(out)
+          return outFile.toBuffer({
+            resolveWithObject: true
+          });
+        },
     },
     {
         example_input: '/userfiles/022/900/481/78855!Head.jpg!mogr.png',
