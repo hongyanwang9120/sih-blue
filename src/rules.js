@@ -127,7 +127,7 @@ const rules = [
       const key = `avatars${match[1]}/${match[2]}.${match[3]}`;
       const buffer = await store.get(key);
       const iv2 = new ImageView2(sharp(buffer));
-      const out = await iv2.m(1).w(200).h(200).process();
+      const out = await iv2.m(1).w(match[4]).h(match[5]).process();
       return out.toBuffer({
         resolveWithObject: true,
       });
@@ -198,7 +198,7 @@ const rules = [
       const key = `avatars${match[1]}/${match[2]}.${match[3]}`;
       const buffer = await store.get(key);
       const iv2 = new ImageView2(sharp(buffer));
-      const out = await iv2.m(1).w(200).h(200).q(48)
+      const out = await iv2.m(1).w(match[4]).h(match[5]).q(48)
         .process();
       return out.toBuffer({
         resolveWithObject: true,
@@ -259,8 +259,8 @@ const rules = [
       const buffer = await store.get(key);
       const im2 = new ImageMogr2(sharp(buffer));
       const out = await im2.thumbnail('720x').process();
-      const outFile = new ImageInfo(out);
-      return outFile.toBuffer({ resolveWithObject: true });
+      const ii = new ImageInfo(sharp(await out.toBuffer()));
+      return ii.process();
     },
   },
   {
@@ -328,10 +328,8 @@ const rules = [
       const iv2 = new ImageView2(sharp(buffer));
       const out = await iv2.m(1).w(192).h(192).q(48)
         .process();
-      const outFile = new ImageInfo(out);
-      return outFile.toBuffer({
-        resolveWithObject: true,
-      });
+      const ii = new ImageInfo(sharp(await out.toBuffer()));
+      return ii.process();
     },
   },
   {
@@ -354,6 +352,15 @@ const rules = [
     example_output: '/userfiles/000/000/002/17!Head.png!o.png?imageView2/1/w/192/h/192|imageMogr2/colorspace/gray',
     pattern: '/userfiles((?:/\\w\\w*)*)(?:%21|!)Head[.](\\w+)(?:(?:%21|!)s[.]png)?(?:%21|!)gray[.]png$',
     repl: '/userfiles${1}!Head.${2}!o.png?imageView2/1/w/192/h/192|imageMogr2/colorspace/gray',
+    async process(pathname, match) {
+      const key = `userfiles${match[1]}!Head.${match[2]}!o.png`;
+      const buffer = await store.get(key);
+      const iv2 = new ImageView2(sharp(buffer));
+      const iv2out = await iv2.m(1).w(192).h(192).process();
+      const im2 = new ImageMogr2(sharp(await iv2out.toBuffer()));
+      const out = await im2.colorspace(true).process();
+      return out.toBuffer({ resolveWithObject: true });
+    },
   },
   {
     example_input: '/userfiles/000/000/002/17!Head.png!s.png!48',
@@ -381,10 +388,8 @@ const rules = [
       const buffer = await store.get(key);
       const iv2 = new ImageView2(sharp(buffer));
       const out = await iv2.m(1).w(match[3]).h(match[4]).process();
-      const outFile = new ImageInfo(out);
-      return outFile.toBuffer({
-        resolveWithObject: true,
-      });
+      const ii = new ImageInfo(sharp(await out.toBuffer()));
+      return ii.process();
     },
   },
   {
@@ -407,6 +412,15 @@ const rules = [
     example_output: '/userfiles/000/000/002/17!Head.png!o.png?imageView2/1/w/200/h/200|imageMogr2/colorspace/gray',
     pattern: '/userfiles((?:/\\w\\w*)*)(?:%21|!)Head[.](\\w+)(?:%21|!)gray.png(?:%21|!)([1-9]\\d*)x([1-9]\\d*)[.]png$',
     repl: '/userfiles${1}!Head.${2}!o.png?imageView2/1/w/${3}/h/${4}|imageMogr2/colorspace/gray',
+    async process(pathname, match) {
+      const key = `userfiles${match[1]}!Head.${match[2]}!o.png`;
+      const buffer = await store.get(key);
+      const iv2 = new ImageView2(sharp(buffer));
+      const iv2out = await iv2.m(1).w(match[3]).h(match[4]).process();
+      const im2 = new ImageMogr2(sharp(await iv2out.toBuffer()));
+      const out = await im2.colorspace(true).process();
+      return out.toBuffer({ resolveWithObject: true });
+    },
   },
   {
     example_input: '/userfiles/000/000/002/17!Head.png!200x200.png!48',
@@ -434,10 +448,8 @@ const rules = [
       const buffer = await store.get(key);
       const im2 = new ImageMogr2(sharp(buffer));
       const out = await im2.b(true).thumbnail('192x192').process();
-      const outFile = new ImageInfo(out);
-      return outFile.toBuffer({
-        resolveWithObject: true,
-      });
+      const ii = new ImageInfo(sharp(await out.toBuffer()));
+      return ii.process();
     },
   },
   {
@@ -465,10 +477,8 @@ const rules = [
       const buffer = await store.get(key);
       const im2 = new ImageMogr2(sharp(buffer));
       const out = await im2.thumbnail('480x').process();
-      const outFile = new ImageInfo(out);
-      return outFile.toBuffer({
-        resolveWithObject: true,
-      });
+      const ii = new ImageInfo(sharp(await out.toBuffer()));
+      return ii.process();
     },
   },
   {
@@ -511,10 +521,8 @@ const rules = [
       const buffer = await store.get(key);
       const im2 = new ImageMogr2(sharp(buffer));
       const out = await im2.thumbnail('720x').process();
-      const outFile = new ImageInfo(out);
-      return outFile.toBuffer({
-        resolveWithObject: true,
-      });
+      const ii = new ImageInfo(sharp(await out.toBuffer()));
+      return ii.process();
     },
   },
   {
@@ -585,10 +593,8 @@ const rules = [
       const buffer = await store.get(key);
       const iv2 = new ImageView2(sharp(buffer));
       const out = await iv2.m(1).w(192).h(192).process();
-      const outFile = new ImageInfo(out);
-      return outFile.toBuffer({
-        resolveWithObject: true,
-      });
+      const ii = new ImageInfo(sharp(await out.toBuffer()));
+      return ii.process();
     },
   },
   {
@@ -632,10 +638,8 @@ const rules = [
       const buffer = await store.get(key);
       const iv2 = new ImageView2(sharp(buffer));
       const out = await iv2.m(1).w(match[5]).h(match[6]).process();
-      const outFile = new ImageInfo(out);
-      return outFile.toBuffer({
-        resolveWithObject: true,
-      });
+      const ii = new ImageInfo(sharp(await out.toBuffer()));
+      return ii.process();
     },
   },
   {
@@ -679,10 +683,8 @@ const rules = [
       const buffer = await store.get(key);
       const im2 = new ImageMogr2(sharp(buffer));
       const out = await im2.thumbnail('480x').process();
-      const outFile = new ImageInfo(out);
-      return outFile.toBuffer({
-        resolveWithObject: true,
-      });
+      const ii = new ImageInfo(sharp(await out.toBuffer()));
+      return ii.process();
     },
   },
   {
@@ -725,10 +727,8 @@ const rules = [
       const buffer = await store.get(key);
       const im2 = new ImageMogr2(sharp(buffer));
       const out = await im2.thumbnail('720x').process();
-      const outFile = new ImageInfo(out);
-      return outFile.toBuffer({
-        resolveWithObject: true,
-      });
+      const ii = new ImageInfo(sharp(await out.toBuffer()));
+      return ii.process();
     },
   },
   {
@@ -799,10 +799,8 @@ const rules = [
       const buffer = await store.get(key);
       const im2 = new ImageMogr2(sharp(buffer));
       const out = await im2.thumbnail('360x').process();
-      const outFile = new ImageInfo(out);
-      return outFile.toBuffer({
-        resolveWithObject: true,
-      });
+      const ii = new ImageInfo(sharp(await out.toBuffer()));
+      return ii.process();
     },
   },
   {
@@ -845,10 +843,8 @@ const rules = [
       const buffer = await store.get(key);
       const iv2 = new ImageView2(sharp(buffer));
       const out = await iv2.m(2).w(match[5]).h(match[6]).process();
-      const outFile = new ImageInfo(out);
-      return outFile.toBuffer({
-        resolveWithObject: true,
-      });
+      const ii = new ImageInfo(sharp(await out.toBuffer()));
+      return ii.process();
     },
   },
   {
@@ -1056,42 +1052,105 @@ const rules = [
     repl: '/${1}${2}/${3}.png!o.png?imageMogr2/thumbnail/!750x190r/gravity/Center/crop/750x190/dx/0/dy/0',
     example_input: '/livefiles/000/000/098/photos/98_35196_1447573874.png!750x190.png',
     example_output: '/livefiles/000/000/098/photos/98_35196_1447573874.png!o.png?imageMogr2/thumbnail/!750x190r/gravity/Center/crop/750x190/dx/0/dy/0',
+    async process(pathname, match) {
+      const key = `${match[1]}${match[2]}/${match[3]}.png!o.png`;
+      const buffer = await store.get(key);
+      const im2 = new ImageMogr2(sharp(buffer));
+      const out = await im2.thumbnail('!750x190r').crop(750, 190, 'center').process();
+      return out.toBuffer({
+        resolveWithObject: true,
+      });
+    },
   },
   {
     pattern: '/(livefiles|userfiles)((?:/\\w\\w*)*)/([\\d_]+)[.]png(?:%21|!)(?:220x220|s)[.]png$',
     repl: '/${1}${2}/${3}.png!o.png?imageMogr2/thumbnail/!220x220r/gravity/Center/crop/220x220/dx/0/dy/0',
     example_input: '/livefiles/000/000/098/photos/98_35196_1447573874.png!220x220.png',
     example_output: '/livefiles/000/000/098/photos/98_35196_1447573874.png!o.png?imageMogr2/thumbnail/!220x220r/gravity/Center/crop/220x220/dx/0/dy/0',
+    async process(pathname, match) {
+      const key = `${match[1]}${match[2]}/${match[3]}.png!o.png`;
+      const buffer = await store.get(key);
+      const im2 = new ImageMogr2(sharp(buffer));
+      const out = await im2.thumbnail('!220x220r').crop(220, 220, 'center').process();
+      return out.toBuffer({
+        resolveWithObject: true,
+      });
+    },
   },
   {
     pattern: '/(livefiles|userfiles)((?:/\\w\\w*)*)/([\\d_]+)[.]png(?:%21|!)([1-9]\\d*)x([1-9]\\d*)[.]png$',
     repl: '/${1}${2}/${3}.png!o.png?imageMogr2/thumbnail/!${4}x${5}r/gravity/Center/crop/${4}x${5}/dx/0/dy/0',
     example_input: '/livefiles/000/000/098/photos/98_35196_1447573874.png!200x400.png',
     example_output: '/livefiles/000/000/098/photos/98_35196_1447573874.png!o.png?imageMogr2/thumbnail/!200x400r/gravity/Center/crop/200x400/dx/0/dy/0',
+    async process(pathname, match) {
+      const key = `${match[1]}${match[2]}/${match[3]}.png!o.png`;
+      const buffer = await store.get(key);
+      const im2 = new ImageMogr2(sharp(buffer));
+      const out = await im2.thumbnail('!200x400r').crop(match[4], match[5], 'center').process();
+      return out.toBuffer({
+        resolveWithObject: true,
+      });
+    },
   },
   {
     pattern: '/(livefiles|userfiles)((?:/\\w\\w*)*)/([\\d_]+)[.]png(?:(?:%21|!)750x396[.]png)?(?:%21|!)48$',
     repl: '/${1}${2}/${3}.png!o.png?imageMogr2/thumbnail/!750x396r/gravity/Center/crop/750x396/dx/0/dy/0/quality/48',
     example_input: '/livefiles/000/000/098/photos/98_35196_1447573874.png!750x396.png!48',
     example_output: '/livefiles/000/000/098/photos/98_35196_1447573874.png!o.png?imageMogr2/thumbnail/!750x396r/gravity/Center/crop/750x396/dx/0/dy/0/quality/48',
+    async process(pathname, match) {
+      const key = `${match[1]}${match[2]}/${match[3]}.png!o.png`;
+      const buffer = await store.get(key);
+      const im2 = new ImageMogr2(sharp(buffer));
+      const out = await im2.thumbnail('!750x396r').crop(750, 396, 'center').q(48).process();
+      return out.toBuffer({
+        resolveWithObject: true,
+      });
+    },
   },
   {
     pattern: '/(livefiles|userfiles)((?:/\\w\\w*)*)/([\\d_]+)[.]png(?:%21|!)(?:750x190|m)[.]png(?:%21|!)48$',
     repl: '/${1}${2}/${3}.png!o.png?imageMogr2/thumbnail/!750x190r/gravity/Center/crop/750x190/dx/0/dy/0/quality/48',
     example_input: '/livefiles/000/000/098/photos/98_35196_1447573874.png!750x190.png!48',
     example_output: '/livefiles/000/000/098/photos/98_35196_1447573874.png!o.png?imageMogr2/thumbnail/!750x190r/gravity/Center/crop/750x190/dx/0/dy/0/quality/48',
+    async process(pathname, match) {
+      const key = `${match[1]}${match[2]}/${match[3]}.png!o.png`;
+      const buffer = await store.get(key);
+      const im2 = new ImageMogr2(sharp(buffer));
+      const out = await im2.thumbnail('!750x190r').crop(750, 190, 'center').q(48).process();
+      return out.toBuffer({
+        resolveWithObject: true,
+      });
+    },
   },
   {
     pattern: '/(livefiles|userfiles)((?:/\\w\\w*)*)/([\\d_]+)[.]png(?:%21|!)(?:220x220|s)[.]png(?:%21|!)48$',
     repl: '/${1}${2}/${3}.png!o.png?imageMogr2/thumbnail/!220x220r/gravity/Center/crop/220x220/dx/0/dy/0/quality/48',
     example_input: '/livefiles/000/000/098/photos/98_35196_1447573874.png!220x220.png!48',
     example_output: '/livefiles/000/000/098/photos/98_35196_1447573874.png!o.png?imageMogr2/thumbnail/!220x220r/gravity/Center/crop/220x220/dx/0/dy/0/quality/48',
+    async process(pathname, match) {
+      const key = `${match[1]}${match[2]}/${match[3]}.png!o.png`;
+      const buffer = await store.get(key);
+      const im2 = new ImageMogr2(sharp(buffer));
+      const out = await im2.thumbnail('!220x220r').crop(220, 220, 'center').q(48).process();
+      return out.toBuffer({
+        resolveWithObject: true,
+      });
+    },
   },
   {
     pattern: '/(livefiles|userfiles)((?:/\\w\\w*)*)/([\\d_]+)[.]png(?:%21|!)([1-9]\\d*)x([1-9]\\d*)[.]png(?:%21|!)48$',
     repl: '/${1}${2}/${3}.png!o.png?imageMogr2/thumbnail/!${4}x${5}r/gravity/Center/crop/${4}x${5}/dx/0/dy/0/quality/48',
     example_input: '/livefiles/000/000/098/photos/98_35196_1447573874.png!200x400.png!48',
     example_output: '/livefiles/000/000/098/photos/98_35196_1447573874.png!o.png?imageMogr2/thumbnail/!200x400r/gravity/Center/crop/200x400/dx/0/dy/0/quality/48',
+    async process(pathname, match) {
+      const key = `${match[1]}${match[2]}/${match[3]}.png!o.png`;
+      const buffer = await store.get(key);
+      const im2 = new ImageMogr2(sharp(buffer));
+      const out = await im2.thumbnail('!200x400r').crop(match[4], match[5], 'center').q(48).process();
+      return out.toBuffer({
+        resolveWithObject: true,
+      });
+    },
   },
   {
     pattern: '/advertise((?:/\\w\\w*)*)/([\\w-]+)[.](\\w+)(?:%21|!)m[.]png[?]imageInfo$',
@@ -1103,10 +1162,8 @@ const rules = [
       const buffer = await store.get(key);
       const im2 = new ImageMogr2(sharp(buffer));
       const out = await im2.thumbnail('480x').process();
-      const outFile = new ImageInfo(out);
-      return outFile.toBuffer({
-        resolveWithObject: true,
-      });
+      const ii = new ImageInfo(sharp(await out.toBuffer()));
+      return ii.process();
     },
   },
   {
@@ -1149,10 +1206,8 @@ const rules = [
       const buffer = await store.get(key);
       const im2 = new ImageMogr2(sharp(buffer));
       const out = await im2.thumbnail('720x').process();
-      const outFile = new ImageInfo(out);
-      return outFile.toBuffer({
-        resolveWithObject: true,
-      });
+      const ii = new ImageInfo(sharp(await out.toBuffer()));
+      return ii.process();
     },
   },
   {
@@ -1194,10 +1249,8 @@ const rules = [
       const buffer = await store.get(key);
       const im2 = new ImageMogr2(sharp(buffer));
       const out = await im2.thumbnail('720x').q(48).process();
-      const outFile = new ImageInfo(out);
-      return outFile.toBuffer({
-        resolveWithObject: true,
-      });
+      const ii = new ImageInfo(sharp(await out.toBuffer()));
+      return ii.process();
     },
   },
   {
@@ -1224,10 +1277,8 @@ const rules = [
       const buffer = await store.get(key);
       const im2 = new ImageMogr2(sharp(buffer));
       const out = await im2.thumbnail('360x').process();
-      const outFile = new ImageInfo(out);
-      return outFile.toBuffer({
-        resolveWithObject: true,
-      });
+      const ii = new ImageInfo(sharp(await out.toBuffer()));
+      return ii.process();
     },
   },
   {
@@ -1270,10 +1321,8 @@ const rules = [
       const buffer = await store.get(key);
       const iv2 = new ImageView2(sharp(buffer));
       const out = await iv2.m(2).w(match[4]).h(match[5]).process();
-      const outFile = new ImageInfo(out);
-      return outFile.toBuffer({
-        resolveWithObject: true,
-      });
+      const ii = new ImageInfo(sharp(await out.toBuffer()));
+      return ii.process();
     },
   },
   {

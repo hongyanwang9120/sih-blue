@@ -14,6 +14,7 @@ class ImageMogr2 {
     }
     this._image = image;
     this._b = false;
+    this._colorspace = false;
     this._q = 75;
     this._thumbnail = async () => {};
     this._crop = async () => {};
@@ -36,7 +37,22 @@ class ImageMogr2 {
    * @returns this
    */
   b(v) {
-    this._b = v;
+    if (v) {
+      this._b = v;
+    }
+    return this;
+  }
+
+  /**
+   * Colorspace
+   * @param {*} v
+   * @returns this
+   */
+
+  colorspace(v) {
+    if (v) {
+      this._colorspace = v;
+    }
     return this;
   }
 
@@ -174,6 +190,9 @@ class ImageMogr2 {
     }
     if (this._b) {
       image.blur(50);
+    }
+    if (this._colorspace) {
+      image.pipelineColourspace('grey16').toColourspace('srgb');
     }
     if (this._thumbnail) {
       await this._thumbnail();
