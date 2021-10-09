@@ -27,7 +27,7 @@ const rules = [
     example_input: '/blued/mrright/408119/408119_1433488325.png',
     example_output: '/blued/mrright/408119/408119_1433488325.png?imageMogr2/thumbnail/!33p',
     async process(pathname, match) {
-      const key = `${match[0]}`;
+      const key = `${match[0]}`.substring(1);
       const buffer = await store.get(key);
       const im2 = new ImageMogr2(sharp(buffer));
       const out = await im2.thumbnail('!33p').process();
@@ -884,7 +884,7 @@ const rules = [
     example_input: '/blued/mrright/408119/408119_1433488325.png',
     example_output: '/blued/mrright/408119/408119_1433488325.png?imageMogr2/thumbnail/!33p',
     async process(pathname, match) {
-      const key = `${match[0]}`;
+      const key = `${match[0]}`.substring(1);
       const buffer = await store.get(key);
       const im2 = new ImageMogr2(sharp(buffer));
       const out = await im2.thumbnail('!33p').process();
