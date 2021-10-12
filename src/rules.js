@@ -879,7 +879,7 @@ const rules = [
       const key = `${match[1]}${match[2]}/${match[3]}.${match[4]}!o.png`;
       const buffer = await store.get(key);
       const iv2 = new ImageView2(sharp(buffer));
-      const out = await iv2.m(2).w(match[5]).h([6]).q(48)
+      const out = await iv2.m(2).w(match[5]).h(match[6]).q(48)
         .process();
       return out.toBuffer({
         resolveWithObject: true,
