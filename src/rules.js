@@ -1260,8 +1260,9 @@ const rules = [
       const buffer = await store.get(key);
       const im2 = new ImageMogr2(sharp(buffer));
       const out = await im2.thumbnail('720x').q(48).process();
-      const ii = new ImageInfo(sharp(await out.toBuffer()));
-      return ii.process();
+      return out.toBuffer({
+        resolveWithObject: true,
+      });
     },
   },
   {
