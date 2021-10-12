@@ -1434,9 +1434,8 @@ const rules = [
       const key = `userfiles${match[1]}!Background.jpg!o.png`;
       const buffer = await store.get(key);
       const iv2 = new ImageView2(sharp(buffer));
-      return iv2.toBuffer({
-        resolveWithObject: true,
-      });
+      const iv2out = await iv2.process();
+      return iv2out.toBuffer({ resolveWithObject: true });
     },
   },
   {
