@@ -12,7 +12,14 @@ exports.handler = async function (event) {
   console.log('request:', JSON.stringify(event, undefined, 2));
 
   try {
-    const processFunc = rules.find(event.path || event.rawPath);
+    let mystr;
+    if (event.queryStringParameters != null) {
+      const arr = Object.keys(event.queryStringParameters);
+      mystr = `?${arr.toString()}`;
+    }
+    let myPath = event.path || event.rawPath;
+    if (mystr) { myPath += mystr; }
+    const processFunc = rules.find(myPath);
     if (processFunc) {
       const { data, info, isBase64Encoded } = await processFunc();
       return {
