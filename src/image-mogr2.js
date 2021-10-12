@@ -155,7 +155,16 @@ class ImageMogr2 {
    * @param {String} gravity
    * @returns this
    */
-  crop(w, h, gravity) {
+
+  crop(widthNumber, heightNumber, gravity) {
+    const w = parseInt(widthNumber, 10);
+    if (Number.isNaN(w) || w <= 0) {
+      throw createError(400, 'Invalid width');
+    }
+    const h = parseInt(heightNumber, 10);
+    if (Number.isNaN(h) || h <= 0) {
+      throw createError(400, 'Invalid height');
+    }
     if (gravity === 'center') {
       this._crop = async () => {
         const buffer = await this._image.toBuffer();

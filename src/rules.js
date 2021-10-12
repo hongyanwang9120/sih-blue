@@ -98,7 +98,8 @@ const rules = [
       const key = `avatars${match[1]}/${match[2]}.${match[3]}`;
       const buffer = await store.get(key);
       const iv2 = new ImageView2(sharp(buffer));
-      return iv2.toBuffer({
+      const iv2out = await iv2.process();
+      return iv2out.toBuffer({
         resolveWithObject: true,
       });
     },
@@ -168,7 +169,8 @@ const rules = [
       const key = `avatars${match[1]}/${match[2]}.${match[3]}`;
       const buffer = await store.get(key);
       const iv2 = new ImageView2(sharp(buffer));
-      return iv2.toBuffer({
+      const iv2out = await iv2.process();
+      return iv2out.toBuffer({
         resolveWithObject: true,
       });
     },
@@ -285,7 +287,8 @@ const rules = [
       const key = `userfiles${match[1]}!Head.${match[2]}!o.png`;
       const buffer = await store.get(key);
       const iv2 = new ImageView2(sharp(buffer));
-      return iv2.toBuffer({
+      const iv2out = await iv2.process();
+      return iv2out.toBuffer({
         resolveWithObject: true,
       });
     },
@@ -312,7 +315,8 @@ const rules = [
       const key = `userfiles${match[1]}!Head.${match[2]}!o.png`;
       const buffer = await store.get(key);
       const iv2 = new ImageView2(sharp(buffer));
-      return iv2.toBuffer({
+      const iv2out = await iv2.process();
+      return iv2out.toBuffer({
         resolveWithObject: true,
       });
     },
@@ -549,7 +553,8 @@ const rules = [
       const key = `${match[1]}${match[2]}/${match[3]}.${match[4]}!o.png`;
       const buffer = await store.get(key);
       const iv2 = new ImageView2(sharp(buffer));
-      return iv2.toBuffer({
+      const iv2out = await iv2.process();
+      return iv2out.toBuffer({
         resolveWithObject: true,
       });
     },
@@ -578,7 +583,8 @@ const rules = [
       const key = `${match[1]}${match[2]}/${match[3]}.${match[4]}!o.png`;
       const buffer = await store.get(key);
       const iv2 = new ImageView2(sharp(buffer));
-      return iv2.toBuffer({
+      const iv2out = await iv2.process();
+      return iv2out.toBuffer({
         resolveWithObject: true,
       });
     },
@@ -755,7 +761,8 @@ const rules = [
       const key = `${match[1]}${match[2]}/${match[3]}.${match[4]}!o.png`;
       const buffer = await store.get(key);
       const iv2 = new ImageView2(sharp(buffer));
-      return iv2.toBuffer({
+      const iv2out = await iv2.process();
+      return iv2out.toBuffer({
         resolveWithObject: true,
       });
     },
@@ -784,7 +791,8 @@ const rules = [
       const key = `${match[1]}${match[2]}/${match[3]}.${match[4]}!o.png`;
       const buffer = await store.get(key);
       const iv2 = new ImageView2(sharp(buffer));
-      return iv2.toBuffer({
+      const iv2out = await iv2.process();
+      return iv2out.toBuffer({
         resolveWithObject: true,
       });
     },
@@ -926,7 +934,8 @@ const rules = [
       const key = `topics/${match[1]}.${match[2]}`;
       const buffer = await store.get(key);
       const iv2 = new ImageView2(sharp(buffer));
-      return iv2.toBuffer({
+      const iv2out = await iv2.process();
+      return iv2out.toBuffer({
         resolveWithObject: true,
       });
     },
@@ -996,7 +1005,8 @@ const rules = [
       const key = `topics/${match[1]}.${match[2]}`;
       const buffer = await store.get(key);
       const iv2 = new ImageView2(sharp(buffer));
-      return iv2.toBuffer({
+      const iv2out = await iv2.process();
+      return iv2out.toBuffer({
         resolveWithObject: true,
       });
     },
@@ -1234,7 +1244,8 @@ const rules = [
       const key = `advertise${match[1]}/${match[2]}.${match[3]}`;
       const buffer = await store.get(key);
       const iv2 = new ImageView2(sharp(buffer));
-      return iv2.toBuffer({
+      const iv2out = await iv2.process();
+      return iv2out.toBuffer({
         resolveWithObject: true,
       });
     },
@@ -1262,7 +1273,8 @@ const rules = [
       const key = `advertise${match[1]}/${match[2]}.${match[3]}`;
       const buffer = await store.get(key);
       const iv2 = new ImageView2(sharp(buffer));
-      return iv2.toBuffer({
+      const iv2out = await iv2.process();
+      return iv2out.toBuffer({
         resolveWithObject: true,
       });
     },
@@ -1378,7 +1390,8 @@ const rules = [
       const key = `userfiles${match[1]}!Background.jpg!o.png`;
       const buffer = await store.get(key);
       const iv2 = new ImageView2(sharp(buffer));
-      return iv2.toBuffer({
+      const iv2out = await iv2.process();
+      return iv2out.toBuffer({
         resolveWithObject: true,
       });
     },
