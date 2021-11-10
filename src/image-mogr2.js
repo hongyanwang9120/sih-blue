@@ -124,11 +124,12 @@ class ImageMogr2 {
           }
           const metadata = await this._image.metadata();
           if (metadata.width && metadata.height) {
-            const scaleX = w / metadata.width;
-            const scaleY = h / metadata.height;
-            const scale = Math.min(scaleX, scaleY);
+            // const scaleX = w / metadata.width;
+            // const scaleY = h / metadata.height;
+            // const scale = Math.min(scaleX, scaleY);
+            // this._image.resize(Math.round(metadata.width * scale));
+            this._image.resize(w,h,{ fit: 'cover'});
 
-            this._image.resize(Math.round(metadata.width * scale));
           } else {
             console.warn('Cannot fetch width/height in metadata');
           }
