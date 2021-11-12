@@ -1455,6 +1455,34 @@ const rules = [
       });
     },
   },
+  {
+    pattern: '/([\\s\\S]*?)[?]imageInfo$',
+    repl: '/([\s\S]*)',
+    example_input: '',
+    example_output: '',
+    async process(pathname, match) {
+      const key = `${match[1]}`;
+      console.log('match:', match[1]);
+      const buffer = await store.get(key);
+      const iv2 = new ImageView2(sharp(buffer));
+      const iv2out = await iv2.process();
+      const ii = new ImageInfo(sharp(await iv2out.toBuffer()));
+       return ii.process();
+    },
+  },
+    {
+    pattern: '([\\s\\S]*?)\!o\.png',
+    repl: '/([\s\S]*)',
+    example_input: '',
+    example_output: '',
+    async process(pathname, match) {
+      const key = `${match[1]}`;
+      const buffer = await store.get(key);
+      const iv2 = new ImageView2(sharp(buffer));
+      const iv2out = await iv2.process();
+      return iv2out.toBuffer({ resolveWithObject: true });
+    },
+  },
 ];
 
 exports.find = function (pathname) {
