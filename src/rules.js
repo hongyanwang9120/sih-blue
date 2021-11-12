@@ -1470,12 +1470,12 @@ const rules = [
     },
   },
   {
-    pattern: '([\\s\\S]*?)\\!o\\.png',
+    pattern: '/([\\s\\S]*?)\\!o\\.png',
     repl: '',
     example_input: '',
     example_output: '',
     async process(pathname, match) {
-      const key = `${match[1]}`;
+      const key = `${match[1]}!o.png`;
       const buffer = await store.get(key);
       const iv2 = new ImageView2(sharp(buffer));
       const iv2out = await iv2.process();
